@@ -8,6 +8,7 @@ import Inventory from "./pages/Inventory.jsx";
 import Products from "./pages/Products.jsx";
 import Orders from "./pages/Orders.jsx";
 import Analytics from "./pages/Analytics.jsx";
+import Authentication from "./pages/Authentication.jsx";
 
 
 const router = createBrowserRouter(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="/products" element={<Products />}/>
       <Route path="/orders" element={<Orders />}/>
       <Route path="/analytics" element={<Analytics />}/>
+      <Route path="/authenticate" element={<Authentication />}/>
     </Route>
   )
 )
