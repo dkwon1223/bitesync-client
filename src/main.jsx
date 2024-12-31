@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import './index.css';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes } from "react-router-dom";
+import { AuthContextProvider } from "./auth/AuthContext.js";
 import Dashboard from "./pages/Dashboard.jsx";
 import RootLayout from "./pages/RootLayout.jsx";
 import Inventory from "./pages/Inventory.jsx";
@@ -26,6 +27,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   </StrictMode>
 );
