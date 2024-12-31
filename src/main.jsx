@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import './index.css';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes } from "react-router-dom";
-import { AuthContextProvider } from "./auth/AuthContext.js";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import { AuthContextProvider } from "./auth/AuthContext";
 import Dashboard from "./pages/Dashboard.jsx";
 import RootLayout from "./pages/RootLayout.jsx";
 import Inventory from "./pages/Inventory.jsx";
