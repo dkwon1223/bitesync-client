@@ -7,9 +7,8 @@ export const signupUser = async (userCredentials) => {
             },
             body: JSON.stringify(userCredentials)
         });
-    
         if(!response.ok) {
-            throw new Error(JSON.stringify(await response.json()));
+            throw new Error(await response.text());
         }
     } catch (error) {
         console.log(JSON.parse(error.message).message[0]);
