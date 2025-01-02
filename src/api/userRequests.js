@@ -9,10 +9,10 @@ export const signupUser = async (userCredentials) => {
         });
     
         if(!response.ok) {
-            throw new Error(response.message);
+            throw new Error(JSON.stringify(await response.json()));
         }
     } catch (error) {
-        console.log("Error: ", error.message);
+        console.log(JSON.parse(error.message).message[0]);
     }
 }
 
@@ -25,11 +25,10 @@ export const loginUser = async (userCredentials) => {
             },
             body: JSON.stringify(userCredentials)
         });
-
         if(!response.ok) {
-            throw new Error(response.message)
+            throw new Error(await response.text());
         }
     } catch(error) {
-        console.log("Error: ", error.message);
+        console.log(error.message);
     }
 }

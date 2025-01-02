@@ -13,22 +13,22 @@ const Authentication = () => {
         setFormData((prevData) => ({...prevData, [name]: value}));
     };
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        e.target.id === "loginForm" ? loginUser(formData) : signupUser(formData)
     };
 
   return (
     <section className='flex flex-col justify-center items-center w-full h-full'>
         {signup ? 
-        <form className='flex flex-col items-center h-1/2' onSubmit={handleSubmit}>
+        <form className='flex flex-col items-center h-1/2' id='signupForm' onSubmit={handleSubmit}>
             <h1 className='font-bold text-xl'>Sign Up</h1>
             <input type="text" name="email" value={formData.email} onChange={handleChange} placeholder="email" className='border'/>
             <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="password" className='border'/>
             <button type='submit' className='border bg-blue-100'>Sign Up</button>
         </form>
         :
-        <form className='flex flex-col items-center h-1/2' onSubmit={handleSubmit}>
+        <form className='flex flex-col items-center h-1/2' id='loginForm' onSubmit={handleSubmit}>
             <h1 className='font-bold text-xl'>Log In</h1>
             <input type="text" name="email" value={formData.email} onChange={handleChange} placeholder="email" className='border'/>
             <input type="password" name="password" value={formData.password} onChange={handleChange}  placeholder="password" className='border'/>
