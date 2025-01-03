@@ -4,6 +4,7 @@ import { toast, Slide } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../auth/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 export const useLogin = () => {
   const { dispatch } = useAuthContext(AuthContext);
@@ -27,6 +28,7 @@ export const useLogin = () => {
         throw new Error(data.error);
       }
       const tokenExtraction = response.headers.get("Authorization").replace("Bearer ", "");
+      const decodedToken = jwtDecode(tokenExtraction);
       toast.success("Logged in successfully", {
         position: "top-center",
         autoClose: 1000,
@@ -37,8 +39,12 @@ export const useLogin = () => {
         transition: Slide,
       });
       setTimeout(() => {
-        localStorage.setItem("token", tokenExtraction);
-        dispatch({ type: "LOGIN", payload: tokenExtraction });
+        localStorage.setItem("authToken", tokenExtraction);
+        dispatch({
+          type: "LOGIN",
+          payload: tokenExtraction,
+          userId: decodedToken.userId, 
+        });
         setLoginLoading(false);
         navigate("/");
       }, 2000);

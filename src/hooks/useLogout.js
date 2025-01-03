@@ -18,7 +18,7 @@ export const useLogout = () => {
     });
     setTimeout(() => {
         dispatch({ type: "LOGOUT" });
-        localStorage.removeItem("token");
+        localStorage.removeItem("authToken");
         navigate("/");
     }, 2000);
   };
