@@ -10,17 +10,22 @@ import Products from "./pages/Products.jsx";
 import Orders from "./pages/Orders.jsx";
 import Analytics from "./pages/Analytics.jsx";
 import Authentication from "./pages/Authentication.jsx";
+import Hero from "./pages/Hero.jsx";
+import Profile from "./pages/Profile.jsx";
+import { ToastContainer } from "react-toastify";
 
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<Dashboard />}/>
+      <Route index element={<Hero />}/>
+      <Route path="/dashboard" element={<Dashboard />}/>
       <Route path="/inventory" element={<Inventory />}/>
       <Route path="/products" element={<Products />}/>
       <Route path="/orders" element={<Orders />}/>
       <Route path="/analytics" element={<Analytics />}/>
       <Route path="/authenticate" element={<Authentication />}/>
+      <Route path="/profile" element={<Profile />}/>
     </Route>
   )
 )
@@ -29,6 +34,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthContextProvider>
       <RouterProvider router={router} />
+      <ToastContainer />
     </AuthContextProvider>
   </StrictMode>
 );

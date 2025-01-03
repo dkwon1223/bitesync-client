@@ -3,11 +3,11 @@ import { useAuthContext } from "./useAuthContext";
 import { toast, Slide } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../auth/AuthContext";
 
 export const useLogin = () => {
-  const { dispatch } = useAuthContext();
+  const { dispatch } = useAuthContext(AuthContext);
   const [loginLoading, setLoginLoading] = useState(null);
-  const [token, setToken] = useState(null);
   const navigate = useNavigate();
 
   const loginUser = async (userCredentials) => {
@@ -26,25 +26,31 @@ export const useLogin = () => {
         const data = await response.json();
         throw Error(data.error);
       }
-      setToken(response.headers
-        .get("Authorization")
-        .replace("Bearer ", ""));
-      localStorage.setItem("token", token);
-      dispatch({ type: "LOGIN", payload: token });
+      const tokenExtraction = response.headers.get("Authorization").replace("Bearer ", "");
+      localStorage.setItem("token", tokenExtraction);
+      dispatch({ type: "LOGIN", payload: tokenExtraction });
       setLoginLoading(false);
       toast.success("Logged in successfully ✅", {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         transition: Slide,
       });
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (err) {
       toast.error(await err.message, {
         position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
       });
     }
   };
