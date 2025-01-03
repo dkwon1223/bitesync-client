@@ -18,7 +18,7 @@ export const useLogout = () => {
     });
     setTimeout(() => {
         dispatch({ type: "LOGOUT" });
-        localStorage.setItem("token", token);
+        localStorage.removeItem("token");
         navigate("/");
     }, 2000);
   };

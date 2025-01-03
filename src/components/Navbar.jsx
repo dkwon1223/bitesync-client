@@ -28,7 +28,7 @@ const Navbar = () => {
             );
           })}
       </>
-      {token && <NavLink onClick={logoutUser}>Logout</NavLink>}
+      {token && <NavLink onClick={logoutUser}>Log Out</NavLink>}
     </nav>
   );
 };
