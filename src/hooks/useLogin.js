@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { toast, Slide } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 export const useLogin = () => {
   const { dispatch } = useAuthContext();
   const [loginLoading, setLoginLoading] = useState(null);
   const [token, setToken] = useState(null);
+  const navigate = useNavigate();
 
   const loginUser = async (userCredentials) => {
     try {
@@ -24,10 +26,9 @@ export const useLogin = () => {
         const data = await response.json();
         throw Error(data.error);
       }
-      const token = response.headers
+      setToken(response.headers
         .get("Authorization")
-        .replace("Bearer ", "");
-      setToken(token);
+        .replace("Bearer ", ""));
       localStorage.setItem("token", token);
       dispatch({ type: "LOGIN", payload: token });
       setLoginLoading(false);
@@ -40,6 +41,7 @@ export const useLogin = () => {
         draggable: true,
         transition: Slide,
       });
+      navigate("/dashboard");
     } catch (err) {
       toast.error(await err.message, {
         position: "top-center",
