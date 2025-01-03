@@ -9,7 +9,7 @@ export const useLogout = () => {
   const logoutUser = () => {
     toast.success("Logging out 👋", {
         position: "top-center",
-        autoClose: 2000,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -17,10 +17,10 @@ export const useLogout = () => {
         transition: Slide,
     });
     setTimeout(() => {
+        dispatch({ type: "LOGOUT" });
+        localStorage.setItem("token", token);
         navigate("/");
     }, 2000);
-    dispatch({ type: "LOGOUT" });
-    localStorage.setItem("token", token);
   };
   return { logoutUser };
 };

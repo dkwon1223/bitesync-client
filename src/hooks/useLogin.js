@@ -24,12 +24,9 @@ export const useLogin = () => {
       );
       if (!response.ok) {
         const data = await response.json();
-        throw Error(data.error);
+        throw new Error(data.message);
       }
       const tokenExtraction = response.headers.get("Authorization").replace("Bearer ", "");
-      localStorage.setItem("token", tokenExtraction);
-      dispatch({ type: "LOGIN", payload: tokenExtraction });
-      setLoginLoading(false);
       toast.success("Logged in successfully ✅", {
         position: "top-center",
         autoClose: 1000,
@@ -40,6 +37,9 @@ export const useLogin = () => {
         transition: Slide,
       });
       setTimeout(() => {
+        localStorage.setItem("token", tokenExtraction);
+        dispatch({ type: "LOGIN", payload: tokenExtraction });
+        setLoginLoading(false);
         navigate("/");
       }, 2000);
     } catch (err) {

@@ -18,8 +18,9 @@ export const useSignup = () => {
       });
       if (!response.ok) {
         const data = await response.json();
-        const message = await data.message[0];
-        throw new Error(message);
+        console.log(data);
+        
+        throw new Error(data.message);
       }
       toast.success("Signed up successfully ✅", {
         position: "top-center",
