@@ -27,7 +27,7 @@ export const AuthContextProvider = ({ children }) => {
       dispatch({
         type: "LOGIN",
         payload: token,
-        userId: decodedToken.sub, 
+        userId: decodedToken.userId, 
       });
     }
   }, []);

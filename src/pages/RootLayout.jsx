@@ -7,7 +7,7 @@ const RootLayout = () => {
       <header className="w-[15%] h-full px-4 py-4 bg-[#171115]">
         <Navbar />
       </header>
-      <main className="w-[85%] h-full px-4 py-4 bg-[#F6FAFE]">
+      <main className="w-[85%] h-full bg-[#F6FAFE]">
         <Outlet/>
       </main>
     </section>
