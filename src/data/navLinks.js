@@ -1,4 +1,11 @@
 import dashboardIcon from "../assets/dashboard-icon.svg";
+import inventoryIcon from "../assets/inventory-icon.svg";
+import menuIcon from "../assets/menu-icon.svg";
+import orderIcon from "../assets/order-icon.svg";
+import analyticsIcon from "../assets/analytics-icon.svg";
+import profileIcon from "../assets/profile-icon.svg";
+import homeIcon from "../assets/home.svg";
+
 
 export const authNavLinks = [
     {
@@ -9,27 +16,27 @@ export const authNavLinks = [
       {
         label: "Inventory",
         route: "/inventory",
-        icon: dashboardIcon
+        icon: inventoryIcon
       },
       {
-        label: "Products",
-        route: "/products",
-        icon: dashboardIcon
+        label: "Menu",
+        route: "/menu",
+        icon: menuIcon
       },
       {
         label: "Orders",
         route: "/orders",
-        icon: dashboardIcon
+        icon: orderIcon
       },
       {
         label: "Analytics",
         route: "/analytics",
-        icon: dashboardIcon
+        icon: analyticsIcon
       },
       {
         label: "Profile",
         route: "/profile",
-        icon: dashboardIcon
+        icon: profileIcon
       },
 ]
 
@@ -37,11 +44,11 @@ export const noAuthNavLinks = [
     {
         label: "Explore",
         route: "/",
-        icon: dashboardIcon
+        icon: homeIcon
     },
     {
         label: "Log In",
         route: "/authenticate",
-        icon: dashboardIcon
+        icon: profileIcon
     }
 ]

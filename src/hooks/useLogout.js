@@ -7,7 +7,7 @@ export const useLogout = () => {
   const { token, dispatch } = useAuthContext(AuthContext);
   const navigate = useNavigate();
   const logoutUser = () => {
-    toast.success("Logging out 👋", {
+    toast.success("Logging out", {
         position: "top-center",
         autoClose: 1500,
         hideProgressBar: false,

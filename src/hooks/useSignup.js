@@ -22,9 +22,9 @@ export const useSignup = () => {
         
         throw new Error(data.message);
       }
-      toast.success("Signed up successfully ✅", {
+      toast.success("Signed up successfully", {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -37,6 +37,12 @@ export const useSignup = () => {
     } catch (err) {
       toast.error(err.message, {
         position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
       });
     }
   };

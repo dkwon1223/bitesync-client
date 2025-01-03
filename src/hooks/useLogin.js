@@ -24,10 +24,10 @@ export const useLogin = () => {
       );
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message);
+        throw new Error(data.error);
       }
       const tokenExtraction = response.headers.get("Authorization").replace("Bearer ", "");
-      toast.success("Logged in successfully ✅", {
+      toast.success("Logged in successfully", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,

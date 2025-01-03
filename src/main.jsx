@@ -6,7 +6,7 @@ import { AuthContextProvider } from "./auth/AuthContext";
 import Dashboard from "./pages/Dashboard.jsx";
 import RootLayout from "./pages/RootLayout.jsx";
 import Inventory from "./pages/Inventory.jsx";
-import Products from "./pages/Products.jsx";
+import Menu from "./pages/Menu.jsx";
 import Orders from "./pages/Orders.jsx";
 import Analytics from "./pages/Analytics.jsx";
 import Authentication from "./pages/Authentication.jsx";
@@ -21,7 +21,7 @@ const router = createBrowserRouter(
       <Route index element={<Hero />}/>
       <Route path="/dashboard" element={<Dashboard />}/>
       <Route path="/inventory" element={<Inventory />}/>
-      <Route path="/products" element={<Products />}/>
+      <Route path="/menu" element={<Menu />}/>
       <Route path="/orders" element={<Orders />}/>
       <Route path="/analytics" element={<Analytics />}/>
       <Route path="/authenticate" element={<Authentication />}/>
