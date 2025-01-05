@@ -8,7 +8,6 @@ import { jwtDecode } from "jwt-decode";
 
 export const useLogin = () => {
   const { dispatch } = useAuthContext(AuthContext);
-  const [loginLoading, setLoginLoading] = useState(null);
   const navigate = useNavigate();
 
   const loginUser = async (userCredentials) => {
@@ -45,7 +44,6 @@ export const useLogin = () => {
           payload: tokenExtraction,
           userId: decodedToken.userId, 
         });
-        setLoginLoading(false);
         navigate("/");
       }, 2000);
     } catch (err) {
@@ -60,5 +58,5 @@ export const useLogin = () => {
       });
     }
   };
-  return { loginUser, loginLoading };
+  return { loginUser };
 };

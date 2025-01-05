@@ -12,11 +12,6 @@ const Navbar = () => {
   const { token, userId } = useAuthContext(AuthContext);
   const { logoutUser } = useLogout();
   const navigate = useNavigate();
-
-  console.log("token:", token);
-  console.log("userId:", userId);
-  
-  
   
   return (
     <nav className="h-full w-full flex flex-col justify-start items-start space-y-6 pt-4 text-white font-sans">
@@ -36,7 +31,7 @@ const Navbar = () => {
                 <NavLink
                   to={link.route}
                   key={link.label}
-                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#602121] rounded-md w-full"
+                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#4f46e5] rounded-md w-full"
                 >
                   <img
                     src={link.icon} 
@@ -51,7 +46,7 @@ const Navbar = () => {
               return (
                 <NavLink
                   to={link.route}
-                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#602121] rounded-md w-full"
+                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#4f46e5] rounded-md w-full"
                   key={link.label}
                 >
                   <img
@@ -67,7 +62,7 @@ const Navbar = () => {
       {token && (
         <NavLink
           to="/"
-          className="flex items-center space-x-2 py-2 text-white hover:bg-[#602121] rounded-md w-full"
+          className="flex items-center space-x-2 py-2 text-white hover:bg-[#4f46e5] rounded-md w-full"
           key="logout"
           onClick={logoutUser}
         >

@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export const useSignup = () => {
   const { dispatch } = useAuthContext();
-  const [signupLoading, setSignupLoading] = useState(null);
+  const [signupLoading] = useState(null);
 
   const signupUser = async (userCredentials) => {
     try {
