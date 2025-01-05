@@ -31,7 +31,11 @@ const Navbar = () => {
                 <NavLink
                   to={link.route}
                   key={link.label}
-                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#4f46e5] rounded-md w-full"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "px-2 flex items-center space-x-2 py-2 text-white bg-[#4f46e5] rounded-md w-full shadow-md"
+                      : "px-2 flex items-center space-x-2 py-2 text-gray-300 hover:text-white hover:bg-[#4f46e5] rounded-md w-full"
+                  }
                 >
                   <img
                     src={link.icon} 
@@ -46,7 +50,11 @@ const Navbar = () => {
               return (
                 <NavLink
                   to={link.route}
-                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#4f46e5] rounded-md w-full"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "px-2 flex items-center space-x-2 py-2 text-white bg-[#4f46e5] rounded-md w-full shadow-md"
+                      : "px-2 flex items-center space-x-2 py-2 text-gray-300 hover:text-white hover:bg-[#4f46e5] rounded-md w-full"
+                  }
                   key={link.label}
                 >
                   <img
