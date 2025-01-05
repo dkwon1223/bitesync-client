@@ -9,7 +9,7 @@ import logoutIcon from "../assets/logout-icon.svg";
 
 
 const Navbar = () => {
-  const { token, userId } = useAuthContext(AuthContext);
+  const { token } = useAuthContext(AuthContext);
   const { logoutUser } = useLogout();
   const navigate = useNavigate();
   
