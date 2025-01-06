@@ -41,8 +41,8 @@ const Inventory = () => {
   }, []);
 
   return (
-    <section className="px-4 sm:px-6 lg:px-12 pt-12 w-full h-full">
-      <div className="sm:flex sm:items-center">
+    <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
+      <div className="sm:flex sm:items-center h-[10%]">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
             Your Inventory
@@ -60,11 +60,11 @@ const Inventory = () => {
           </button>
         </div>
       </div>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead>
+      <div className="mt-4 flex h-[80%] min-w-full">
+        <div className="sm:-mx-6 lg:-mx-8 w-full">
+          <div className="inline-block min-w-full max-h-full align-middle overflow-y-auto pb-2">
+            <table className="min-w-full">
+              <thead className="sticky top-0 z-30 bg-[#F6FAFE] shadow-md">
                 <tr>
                   <th
                     scope="col"
@@ -98,7 +98,7 @@ const Inventory = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-300 bg-white">
                 {inventoryItems.map((item) => (
                   <tr key={item.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
