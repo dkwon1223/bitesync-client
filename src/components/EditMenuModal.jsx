@@ -1,24 +1,55 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
 
-const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
+const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMenu }) => {
   const [formData, setFormData] = useState({
     name: "",
     imageUrl: "",
     description: "",
     price: 0,
     category: "",
-    available: false
+    available: false,
   });
 
-  const postMenuItem = async (userId, token) => {
+  const fetchMenuItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/menu/user/${userId}`,
+        `http://localhost:8080/api/menu/user/${userId}/item/${itemId}`,
         {
-          method: "POST",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
+      }
+      const data = await response.json();
+      setFormData(data);
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    }
+  };
+
+  const updateMenuItem = async (userId, itemId, token) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/menu/user/${userId}/item/${itemId}`,
+        {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -30,7 +61,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
         const data = await response.json();
         throw new Error(Object.values(data)[0]);
       }
-      toast.success("Inventory item created", {
+      toast.success("Menu item updated", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
@@ -52,6 +83,12 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
     }
   };
 
+  useEffect(() => {
+    if(editing) {
+        fetchMenuItem(userId, itemId, token);
+    }
+  }, [editing])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -59,13 +96,13 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    postMenuItem(userId, token);
-    setAdding(false);
+    updateMenuItem(userId, itemId, token)
+    setEditing(false);
     fetchUserMenu(token, userId);
   };
 
   return (
-    <Dialog open={adding} onClose={setAdding} className="relative z-40">
+    <Dialog open={editing} onClose={setEditing} className="relative z-40">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -82,7 +119,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
                 <div className="space-y-12">
                   <div className="border-b border-gray-900/10 pb-4">
                     <h2 className="text-xl font-semibold text-gray-900">
-                      Add Menu Item
+                      Update Menu Item
                     </h2>
                     <div className="mt-10 flex justify-between flex-grow sm:grid-cols-6">
                       <div className="w-1/2 pr-12 flex flex-col justify-evenly">
@@ -215,7 +252,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
                         type="submit"
                         className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
-                        Add Item
+                        Update Menu Item
                       </button>
                     </div>
                   </div>
@@ -225,7 +262,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
             <div className="mt-5 sm:mt-6">
               <button
                 type="button"
-                onClick={() => setAdding(false)}
+                onClick={() => setEditing(false)}
                 className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Go back to Menu Items
@@ -238,4 +275,4 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
   );
 };
 
-export default AddMenuModal;
+export default EditMenuModal;
