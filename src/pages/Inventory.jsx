@@ -6,6 +6,7 @@ import EditInventoryModal from "../components/EditInventoryModal";
 const Inventory = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
   const [editing, setEditing] = useState(false);
+  const [itemId, setItemId] = useState(null);
   const { token, userId } = useContext(AuthContext);
 
   const fetchUserInventory = async (token, userId) => {
@@ -43,12 +44,13 @@ const Inventory = () => {
   }, []);
 
   const handleEdit = (e) => {
+    setItemId(e.target.id);
     setEditing(true);
   }
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
-      <EditInventoryModal editing={editing} setEditing={setEditing}/>
+      <EditInventoryModal editing={editing} setEditing={setEditing} itemId={itemId} token={token} userId={userId}/>
       <div className="sm:flex sm:items-center h-[10%]">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
