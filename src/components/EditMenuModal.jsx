@@ -213,7 +213,7 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
                           </div>
                         </div>
                       </div>
-                      <div className="w-1/2">
+                      <div className="w-1/2 max-h-36">
                         <div className="col-span-full">
                           <label
                             htmlFor="imageUrl"
@@ -222,10 +222,6 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
                             Image URL
                           </label>
                           <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                            <img
-                              src={formData.imageUrl}
-                              className="h-14 mr-4"
-                            />
                             <input
                               id="imageUrl"
                               name="imageUrl"
@@ -238,9 +234,9 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
                             />
                           </div>
                         </div>
-                        <div>
+                        <div className="flex justify-center items-center mt-4">
                           {formData.imageUrl ? (
-                            <img src={formData.imageUrl} />
+                            <img src={formData.imageUrl} className="max-h-52 rounded-lg"/>
                           ) : (
                             <PhotoIcon className="w-3/4" />
                           )}
