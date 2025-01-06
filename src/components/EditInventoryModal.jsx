@@ -10,6 +10,7 @@ export default function EditInventoryModal({
   itemId,
   token,
   userId,
+  fetchUserInventory
 }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -65,6 +66,15 @@ export default function EditInventoryModal({
       if (!response.ok) {
         throw new Error("Failed to update inventory item. Try again later.");
       }
+      toast.success("Item updated", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
@@ -92,6 +102,8 @@ export default function EditInventoryModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     updateInventoryItem(userId, itemId, token);
+    setEditing(false);
+    fetchUserInventory(token, userId);
   }
 
   return (

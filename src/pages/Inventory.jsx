@@ -41,7 +41,7 @@ const Inventory = () => {
 
   useEffect(() => {
     fetchUserInventory(token, userId);
-  }, []);
+  }, [editing]);
 
   const handleEdit = (e) => {
     setItemId(e.target.id);
@@ -50,7 +50,7 @@ const Inventory = () => {
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
-      <EditInventoryModal editing={editing} setEditing={setEditing} itemId={itemId} token={token} userId={userId}/>
+      <EditInventoryModal editing={editing} setEditing={setEditing} itemId={itemId} token={token} userId={userId} fetchUserInventory={fetchUserInventory}/>
       <div className="sm:flex sm:items-center h-[10%]">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
