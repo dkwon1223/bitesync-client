@@ -13,64 +13,66 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="h-full w-full flex flex-col justify-start items-start space-y-6 pt-4 text-white font-sans">
+    <nav className="h-full w-full flex flex-col justify-start items-start space-y-6 pt-4 text-white font-sans lg:flex lg:space-y-0">
       <div
-        className="flex justify-center items-center h-12 w-[90%] cursor-pointer"
-        onClick={() => {
-          navigate("/");
-        }}
+        className="flex justify-center items-center h-12 w-[90%] cursor-pointer mb-4 ml-3"
+        onClick={() => navigate("/")}
       >
-        <img src={AppIcon} alt="BiteSync logo" className="w-1/4" />
-        <h1 className="font-extrabold text-xl w-3/4 text-center">BiteSync</h1>
+        <img src={AppIcon} alt="BiteSync logo" className="w-1/5 mr-2" />
+        <h1 className="font-extrabold text-xl w-3/4 text-center lg:text-left">
+          BiteSync
+        </h1>
       </div>
-      <>
-        {token
-          ? authNavLinks.map((link) => {
-              return (
-                <NavLink
-                  to={link.route}
-                  key={link.label}
-                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#432C54] rounded-md w-full"
-                >
-                  <img
-                    src={link.icon} 
-                    alt={`${link.label} icon`}
-                    className="w-6 h-6 object-contain" 
-                  />
-                  <span className="text-sm">{link.label}</span>
-                </NavLink>
-              );
-            })
-          : noAuthNavLinks.map((link) => {
-              return (
-                <NavLink
-                  to={link.route}
-                  className="flex items-center space-x-2 py-2 text-white hover:bg-[#432C54] rounded-md w-full"
-                  key={link.label}
-                >
-                  <img
-                    src={link.icon} 
-                    alt={`${link.label} icon`}
-                    className="w-6 h-6 object-contain" 
-                  />
-                  <span className="text-sm">{link.label}</span>
-                </NavLink>
-              );
-            })}
-      </>
+      {token
+        ? authNavLinks.map((link) => (
+            <NavLink
+              to={link.route}
+              key={link.label}
+              className={({ isActive }) =>
+                isActive
+                  ? "px-2 flex items-center space-y-2 space-x-2 py-2 text-white bg-[#4f46e5] rounded-md w-full shadow-md"
+                  : "px-2 flex items-center space-y-2 space-x-2 py-2 text-gray-300 hover:text-white hover:bg-[#4f46e5] rounded-md w-full"
+              }
+            >
+              <img
+                src={link.icon}
+                alt={`${link.label} icon`}
+                className="w-6 h-6 object-contain"
+              />
+              <span className="text-lg font-thin">{link.label}</span>
+            </NavLink>
+          ))
+        : noAuthNavLinks.map((link) => (
+            <NavLink
+              to={link.route}
+              className={({ isActive }) =>
+                isActive
+                  ? "px-2 flex items-center space-y-2 space-x-2 py-2 text-white bg-[#4f46e5] rounded-md w-full shadow-md"
+                  : "px-2 flex items-center space-y-2 space-x-2 py-2 text-gray-300 hover:text-white hover:bg-[#4f46e5] rounded-md w-full"
+              }
+              key={link.label}
+            >
+              <img
+                src={link.icon}
+                alt={`${link.label} icon`}
+                className="w-6 h-6 object-contain"
+              />
+              <span className="text-lg font-thin">{link.label}</span>
+            </NavLink>
+          ))}
       {token && (
         <NavLink
           to="/"
-          className="flex items-center space-x-2 py-2 text-white hover:bg-[#432C54] rounded-md w-full"
+          className="flex items-center space-y-2 space-x-2 py-2 text-white hover:bg-[#4f46e5] rounded-md w-full"
           key="logout"
           onClick={logoutUser}
         >
           <img
-            src={logoutIcon} 
+            src={logoutIcon}
             alt={`logout icon`}
-            className="w-6 h-6 object-contain" 
+            className="w-6 h-6 object-contain"
           />
-          <span className="text-sm">Log Out</span>
+          <span className="text-lg font-thin">Log Out</span>
         </NavLink>
       )}
     </nav>
