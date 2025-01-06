@@ -1,75 +1,98 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import IconPurple from "../assets/icon-purple.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast, Slide } from "react-toastify";
 
-export default function EditInventoryModal({ editing, setEditing, itemId, token, userId }) {
-    const [formData, setFormData] = useState({
-        name: "",
-        imageUrl: "",
-        quantity: "",
-        unitPrice: 0,
-        category: ""
-    });
+export default function EditInventoryModal({
+  editing,
+  setEditing,
+  itemId,
+  token,
+  userId,
+}) {
+  const [formData, setFormData] = useState({
+    name: "",
+    imageUrl: "",
+    quantity: "",
+    unitPrice: 0,
+    category: "",
+  });
 
-    const fetchInventoryItem = async () => {
-        try {
-            const response = await fetch(
-              `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                }
-              }
-            );
-            if (!response.ok) {
-              throw new Error("Failed to update inventory data. Try again later.");
-            }
-            const data = response.json();
-            setFormData(data);
-          } catch (error) {
-            toast.error(await error.message, {
-              position: "top-center",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              transition: Slide,
-            });
-          }
+  const fetchInventoryItem = async (userId, itemId, token) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update inventory data. Try again later.");
+      }
+      const data = await response.json();
+      setFormData(data);
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
     }
+  };
 
-    const updateInventoryItem = async (userId, itemId, token) => {
-        try {
-            const response = await fetch(
-              `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
-              {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(formData)
-              }
-            );
-            if (!response.ok) {
-              throw new Error("Failed to update inventory data. Try again later.");
-            }
-          } catch (error) {
-            toast.error(await error.message, {
-              position: "top-center",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              transition: Slide,
-            });
-          }
+  const updateInventoryItem = async (userId, itemId, token) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update inventory item. Try again later.");
+      }
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
     }
+  };
+
+  useEffect(() => {
+    if(editing) {
+        fetchInventoryItem(userId, itemId, token);
+    }
+  }, [editing])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateInventoryItem(userId, itemId, token);
+  }
 
   return (
     <Dialog open={editing} onClose={setEditing} className="relative z-40">
@@ -85,7 +108,7 @@ export default function EditInventoryModal({ editing, setEditing, itemId, token,
             className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-sm lg:w-full lg:max-w-3xl sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
           >
             <div>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="space-y-12">
                   <div className="border-b border-gray-900/10 pb-12">
                     <h2 className="text-xl font-semibold text-gray-900">
@@ -108,6 +131,8 @@ export default function EditInventoryModal({ editing, setEditing, itemId, token,
                                 type="text"
                                 placeholder="name of item"
                                 required
+                                onChange={handleChange}
+                                value={formData.name}
                                 className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                               />
                             </div>
@@ -128,6 +153,8 @@ export default function EditInventoryModal({ editing, setEditing, itemId, token,
                                 type="number"
                                 placeholder="quantity of items"
                                 required
+                                onChange={handleChange}
+                                value={formData.quantity}
                                 className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                               />
                             </div>
@@ -150,6 +177,8 @@ export default function EditInventoryModal({ editing, setEditing, itemId, token,
                                 step={0.01}
                                 placeholder="unit price of items"
                                 required
+                                onChange={handleChange}
+                                value={formData.unitPrice}
                                 className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                               />
                             </div>
@@ -170,6 +199,8 @@ export default function EditInventoryModal({ editing, setEditing, itemId, token,
                                 type="text"
                                 placeholder="item category"
                                 required
+                                onChange={handleChange}
+                                value={formData.category}
                                 className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                               />
                             </div>
@@ -234,12 +265,6 @@ export default function EditInventoryModal({ editing, setEditing, itemId, token,
                   </div>
                 </div>
                 <div className="mt-6 flex items-center justify-end gap-x-6">
-                  <button
-                    type="button"
-                    className="text-sm/6 font-semibold text-gray-900"
-                  >
-                    Cancel
-                  </button>
                   <button
                     type="submit"
                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
