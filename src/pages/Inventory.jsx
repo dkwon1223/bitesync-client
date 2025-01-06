@@ -24,7 +24,8 @@ const Inventory = () => {
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to retrieve inventory data. Try again later.");
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
       }
       const data = await response.json();
       setInventoryItems(data);
@@ -57,7 +58,7 @@ const Inventory = () => {
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
       <EditInventoryModal editing={editing} setEditing={setEditing} itemId={itemId} token={token} userId={userId} fetchUserInventory={fetchUserInventory}/>
-      <AddInventoryModal adding={adding} setAdding={setAdding} userId={userId} token={token}/>
+      <AddInventoryModal adding={adding} setAdding={setAdding} userId={userId} token={token} fetchUserInventory={fetchUserInventory} />
       <div className="sm:flex sm:items-center h-[10%]">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">

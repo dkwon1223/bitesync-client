@@ -3,7 +3,7 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { toast, Slide } from "react-toastify";
 
-const AddInventoryModal = ({ adding, setAdding, userId, token }) => {
+const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventory }) => {
   const [formData, setFormData] = useState({
     name: "",
     imageUrl: "",
@@ -26,7 +26,8 @@ const AddInventoryModal = ({ adding, setAdding, userId, token }) => {
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to post inventory item. Try again later.");
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
       }
       toast.success("Inventory item created", {
         position: "top-center",
@@ -59,7 +60,7 @@ const AddInventoryModal = ({ adding, setAdding, userId, token }) => {
     e.preventDefault();
     postInventoryItem(userId, token);
     setAdding(false);
-    
+    fetchUserInventory(token, userId);
   };
 
   return (

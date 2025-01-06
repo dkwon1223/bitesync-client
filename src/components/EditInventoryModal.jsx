@@ -32,7 +32,8 @@ export default function EditInventoryModal({
         }
       );
       if (!response.ok) {
-        throw new Error(response.json().message);
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
       }
       const data = await response.json();
       setFormData(data);
@@ -63,9 +64,48 @@ export default function EditInventoryModal({
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to update inventory item. Try again later.");
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
       }
       toast.success("Item updated", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    }
+  };
+
+  const deleteInventoryItem = async (userId, itemId, token) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
+      }
+      toast.success("Item deleted", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
@@ -104,6 +144,12 @@ export default function EditInventoryModal({
     setEditing(false);
     fetchUserInventory(token, userId);
   };
+
+  const handleDelete = () => {
+    deleteInventoryItem(userId, itemId, token);
+    setEditing(false);
+    fetchUserInventory(token, userId);
+  }
 
   return (
     <Dialog open={editing} onClose={setEditing} className="relative z-40">
@@ -279,6 +325,13 @@ export default function EditInventoryModal({
                         className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
                         Update Item
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={handleDelete}
+                      >
+                        Delete Item
                       </button>
                     </div>
                   </div>
