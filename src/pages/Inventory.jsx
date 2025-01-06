@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { toast, Slide } from "react-toastify";
+import EditInventoryModal from "../components/EditInventoryModal";
 
 const Inventory = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [editing, setEditing] = useState(false);
   const { token, userId } = useContext(AuthContext);
 
   const fetchUserInventory = async (token, userId) => {
@@ -40,8 +42,13 @@ const Inventory = () => {
     fetchUserInventory(token, userId);
   }, []);
 
+  const handleEdit = (e) => {
+    setEditing(true);
+  }
+
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
+      <EditInventoryModal editing={editing} setEditing={setEditing}/>
       <div className="sm:flex sm:items-center h-[10%]">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
@@ -60,7 +67,7 @@ const Inventory = () => {
           </button>
         </div>
       </div>
-      <div className="mt-4 flex h-[80%] min-w-full">
+      <div className="mt-4 flex h-[85%] min-w-full">
         <div className="sm:-mx-6 lg:-mx-8 w-full">
           <div className="inline-block min-w-full max-h-full align-middle overflow-y-auto pb-2">
             <table className="min-w-full">
@@ -118,8 +125,9 @@ const Inventory = () => {
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
                       <a
-                        href="#"
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        id={item.id}
+                        onClick={handleEdit}
                       >
                         Edit<span className="sr-only">, {item.name}</span>
                       </a>
