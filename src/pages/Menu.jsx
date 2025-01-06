@@ -183,12 +183,12 @@ const Menu = () => {
                       value: item.price - item.costToMake,
                     },
                   ].map((entry, index) => (
-                    <>
-                      <span key={`${index}-label`} className="text-gray-800">
+                    <div key={`id-${item.id}-name-${item.name}${index}-label`} className="contents">
+                      <span className="text-gray-800">
                         {entry.label}:
                       </span>
                       <span
-                        key={`${index}-value`}
+                        key={`id-${item.id}-name-${item.name}${index}-value`}
                         className="text-right font-medium text-gray-700"
                       >
                         {Intl.NumberFormat("en-US", {
@@ -196,7 +196,7 @@ const Menu = () => {
                           currency: "USD",
                         }).format(entry.value)}
                       </span>
-                    </>
+                    </div>
                   ))}
                 </div>
               </div>
