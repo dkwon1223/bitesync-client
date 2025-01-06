@@ -1,6 +1,7 @@
 import { ListBulletIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
+import { toast, Slide } from "react-toastify";
 
 const Menu = () => {
   const { token, userId } = useContext(AuthContext);
@@ -37,9 +38,52 @@ const Menu = () => {
     }
   };
 
+  const deleteMenuItem = async (userId, itemId, token) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/menu/user/${userId}/item/${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
+      }
+      toast.success("Item deleted", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    }
+  }
+
   useEffect(() => {
     fetchUserMenu(token, userId);
-  }, []);
+  }, [menuItems]);
+
+  const handleDelete = (e) => {
+    deleteMenuItem(userId, e.target.id, token);
+    fetchUserMenu(token, userId);
+  }
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
@@ -48,16 +92,14 @@ const Menu = () => {
           <h1 className="text-xl font-semibold text-gray-900">
             Your Menu Items
           </h1>
-          <p className="mt-2 text-sm text-gray-700">
-            A list of all inventory items
-          </p>
+          <p className="mt-2 text-sm text-gray-700">A list of all menu items</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Add inventory item
+            Add Menu Item
           </button>
         </div>
       </div>
@@ -80,15 +122,43 @@ const Menu = () => {
                     {item.category}
                   </span>
                 </div>
-                <p className="mt-1 truncate text-sm text-gray-500">
+                <p className="mt-1 truncate text-sm text-gray-500 my-8">
                   {item.description}
                 </p>
+                <div className="grid grid-cols-2 gap-y-1 text-sm font-semibold">
+                  {[
+                    { label: "Price", value: item.price },
+                    { label: "Ingredient Cost", value: item.costToMake },
+                    {
+                      label: "Gross Profit",
+                      value: item.price - item.costToMake,
+                    },
+                  ].map((entry, index) => (
+                    <>
+                      <span
+                        key={`${index}-label`}
+                        className="text-gray-800"
+                      >
+                        {entry.label}:
+                      </span>
+                      <span
+                        key={`${index}-value`}
+                        className="text-right font-medium text-gray-700"
+                      >
+                        {Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(entry.value)}
+                      </span>
+                    </>
+                  ))}
+                </div>
               </div>
-              <img
-                alt=""
-                src={item.imageUrl}
-                className="size-10 shrink-0 rounded-full bg-gray-300"
-              />
+                  <img
+                    alt=""
+                    src={item.imageUrl}
+                    className="size-20 shrink-0 rounded-full bg-gray-300"
+                  />
             </div>
             <div>
               <div className="-mt-px flex divide-x divide-gray-200">
@@ -102,7 +172,7 @@ const Menu = () => {
                   </button>
                 </div>
                 <div className="-ml-px flex w-0 flex-1">
-                  <button className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                  <button className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900" id={item.id} onClick={handleDelete}>
                     <TrashIcon
                       aria-hidden="true"
                       className="size-5 text-gray-400"
