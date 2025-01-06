@@ -1,11 +1,18 @@
-import { ListBulletIcon, TrashIcon } from "@heroicons/react/20/solid";
+import {
+  ListBulletIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/20/solid";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { toast, Slide } from "react-toastify";
+import AddMenuModal from "../components/AddMenuModal";
 
 const Menu = () => {
   const { token, userId } = useContext(AuthContext);
   const [menuItems, setMenuItems] = useState([]);
+  const [adding, setAdding] = useState(false);
 
   const fetchUserMenu = async (token, userId) => {
     try {
@@ -47,7 +54,7 @@ const Menu = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-          }
+          },
         }
       );
       if (!response.ok) {
@@ -74,7 +81,7 @@ const Menu = () => {
         transition: Slide,
       });
     }
-  }
+  };
 
   useEffect(() => {
     fetchUserMenu(token, userId);
@@ -83,10 +90,15 @@ const Menu = () => {
   const handleDelete = (e) => {
     deleteMenuItem(userId, e.target.id, token);
     fetchUserMenu(token, userId);
-  }
+  };
+
+  const handlePost = () => {
+    setAdding(true);
+  };
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
+      <AddMenuModal adding={adding} setAdding={setAdding} userId={userId} token={token} fetchUserMenu={fetchUserMenu}/>
       <div className="sm:flex sm:items-center h-[10%] mb-8">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
@@ -98,6 +110,7 @@ const Menu = () => {
           <button
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={handlePost}
           >
             Add Menu Item
           </button>
@@ -125,6 +138,20 @@ const Menu = () => {
                 <p className="mt-1 truncate text-sm text-gray-500 my-8">
                   {item.description}
                 </p>
+                <p className="my-4 flex justify-between items-center">
+                  Available:{" "}
+                  {item.available ? (
+                    <CheckCircleIcon
+                      aria-hidden="true"
+                      className="size-7 text-green-400"
+                    />
+                  ) : (
+                    <XCircleIcon
+                      aria-hidden="true"
+                      className="size-5 text-red-400"
+                    />
+                  )}
+                </p>
                 <div className="grid grid-cols-2 gap-y-1 text-sm font-semibold">
                   {[
                     { label: "Price", value: item.price },
@@ -135,10 +162,7 @@ const Menu = () => {
                     },
                   ].map((entry, index) => (
                     <>
-                      <span
-                        key={`${index}-label`}
-                        className="text-gray-800"
-                      >
+                      <span key={`${index}-label`} className="text-gray-800">
                         {entry.label}:
                       </span>
                       <span
@@ -154,11 +178,11 @@ const Menu = () => {
                   ))}
                 </div>
               </div>
-                  <img
-                    alt=""
-                    src={item.imageUrl}
-                    className="size-20 shrink-0 rounded-full bg-gray-300"
-                  />
+              <img
+                alt=""
+                src={item.imageUrl}
+                className="size-20 shrink-0 rounded-full bg-gray-300 object-contain"
+              />
             </div>
             <div>
               <div className="-mt-px flex divide-x divide-gray-200">
@@ -172,7 +196,11 @@ const Menu = () => {
                   </button>
                 </div>
                 <div className="-ml-px flex w-0 flex-1">
-                  <button className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900" id={item.id} onClick={handleDelete}>
+                  <button
+                    className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
+                    id={item.id}
+                    onClick={handleDelete}
+                  >
                     <TrashIcon
                       aria-hidden="true"
                       className="size-5 text-gray-400"
