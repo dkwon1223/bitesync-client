@@ -43,7 +43,7 @@ const Inventory = () => {
 
   useEffect(() => {
     fetchUserInventory(token, userId);
-  }, [editing]);
+  }, [editing, adding]);
 
   const handleEdit = (e) => {
     setItemId(e.target.id);
