@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { toast, Slide } from "react-toastify";
 import EditInventoryModal from "../components/EditInventoryModal";
+import AddInventoryModal from "../components/AddInventoryModal";
 
 const Inventory = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
   const [editing, setEditing] = useState(false);
+  const [adding, setAdding] = useState(false);
   const [itemId, setItemId] = useState(null);
   const { token, userId } = useContext(AuthContext);
 
@@ -48,9 +50,14 @@ const Inventory = () => {
     setEditing(true);
   }
 
+  const handlePost = () => {
+    setAdding(true);
+  }
+
   return (
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
       <EditInventoryModal editing={editing} setEditing={setEditing} itemId={itemId} token={token} userId={userId} fetchUserInventory={fetchUserInventory}/>
+      <AddInventoryModal adding={adding} setAdding={setAdding} userId={userId} token={token}/>
       <div className="sm:flex sm:items-center h-[10%]">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
@@ -64,6 +71,7 @@ const Inventory = () => {
           <button
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={handlePost}
           >
             Add inventory item
           </button>
