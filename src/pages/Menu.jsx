@@ -15,6 +15,7 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [itemId, setItemId] = useState(null);
 
   const fetchUserMenu = async (token, userId) => {
@@ -73,6 +74,7 @@ const Menu = () => {
         draggable: true,
         transition: Slide,
       });
+      setDeleting(true);
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
@@ -88,11 +90,11 @@ const Menu = () => {
 
   useEffect(() => {
     fetchUserMenu(token, userId);
-  }, [editing, adding]);
+  }, [editing, adding, deleting]);
 
   const handleDelete = (e) => {
-    deleteMenuItem(userId, e.target.id, token);
-    fetchUserMenu(token, userId);
+    deleteMenuItem(userId, parseInt(e.target.id), token);
+    setDeleting(false);
   };
 
   const handleUpdate = (e) => {
