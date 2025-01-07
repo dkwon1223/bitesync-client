@@ -3,19 +3,20 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { toast, Slide } from "react-toastify";
 
-const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventory }) => {
+const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
   const [formData, setFormData] = useState({
     name: "",
     imageUrl: "",
-    quantity: "",
-    unitPrice: 0,
+    description: "",
+    price: 0,
     category: "",
+    available: false
   });
 
-  const postInventoryItem = async (userId, token) => {
+  const postMenuItem = async (userId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}`,
+        `http://localhost:8080/api/menu/user/${userId}`,
         {
           method: "POST",
           headers: {
@@ -58,9 +59,9 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    postInventoryItem(userId, token);
+    postMenuItem(userId, token);
     setAdding(false);
-    fetchUserInventory(token, userId);
+    fetchUserMenu(token, userId);
   };
 
   return (
@@ -81,7 +82,7 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
                 <div className="space-y-12">
                   <div className="border-b border-gray-900/10 pb-4">
                     <h2 className="text-xl font-semibold text-gray-900">
-                      Add Inventory Item
+                      Add Menu Item
                     </h2>
                     <div className="mt-10 flex justify-between flex-grow sm:grid-cols-6">
                       <div className="w-1/2 pr-12 flex flex-col justify-evenly">
@@ -109,45 +110,44 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
                         </div>
                         <div className="sm:col-span-4">
                           <label
-                            htmlFor="quantity"
+                            htmlFor="description"
                             className="block text-sm/6 font-medium text-gray-900"
                           >
-                            Quantity
+                            Description
                           </label>
                           <div className="mt-2">
                             <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                              <input
-                                id="quantity"
-                                name="quantity"
-                                type="number"
-                                placeholder="quantity of items"
+                              <textarea
+                                id="description"
+                                name="description"
+                                placeholder="description of item"
                                 required
                                 onChange={handleChange}
-                                value={formData.quantity}
+                                value={formData.description}
                                 className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                              />
+                              ></textarea>
                             </div>
                           </div>
                         </div>
                         <div className="sm:col-span-4">
                           <label
-                            htmlFor="unitPrice"
+                            htmlFor="price"
                             className="block text-sm/6 font-medium text-gray-900"
                           >
-                            Unit Price
+                            Price
                           </label>
                           <div className="mt-2">
                             <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                               <input
-                                id="unitPrice"
-                                name="unitPrice"
+                                id="price"
+                                name="price"
                                 type="number"
                                 min={0.01}
                                 step={0.01}
                                 placeholder="unit price of items"
                                 required
                                 onChange={handleChange}
-                                value={formData.unitPrice}
+                                value={formData.price}
                                 className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                               />
                             </div>
@@ -185,10 +185,6 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
                             Image URL
                           </label>
                           <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                            <img
-                              src={formData.imageUrl}
-                              className="h-14 mr-4"
-                            />
                             <input
                               id="imageUrl"
                               name="imageUrl"
@@ -201,8 +197,12 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
                             />
                           </div>
                         </div>
-                        <div>
-                            {formData.imageUrl ? <img src={formData.imageUrl}/> : <PhotoIcon  className="w-3/4"/>}
+                        <div className="flex justify-center items-center mt-4">
+                          {formData.imageUrl ? (
+                            <img src={formData.imageUrl} />
+                          ) : (
+                            <PhotoIcon className="w-3/4" />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -224,7 +224,7 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
                 onClick={() => setAdding(false)}
                 className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Go back to Inventory Items
+                Go back to Menu Items
               </button>
             </div>
           </DialogPanel>
@@ -234,4 +234,4 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
   );
 };
 
-export default AddInventoryModal;
+export default AddMenuModal;
