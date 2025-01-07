@@ -93,7 +93,7 @@ const Menu = () => {
   }, [editing, adding, deleting]);
 
   const handleDelete = (e) => {
-    deleteMenuItem(userId, parseInt(e.target.id), token);
+    deleteMenuItem(userId, e.target.id, token);
     setDeleting(false);
   };
 
@@ -142,7 +142,7 @@ const Menu = () => {
       </div>
       <ul
         role="list"
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-y-auto"
+        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-[80%]"
       >
         {menuItems.map((item) => (
           <li

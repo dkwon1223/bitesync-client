@@ -53,8 +53,9 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    const { name, value, type } = e.target;
+    const parsedValue = type === "number" ? Number(value) : value
+    setFormData((prevData) => ({ ...prevData, [name]: parsedValue }));
   };
 
   const handleSubmit = (e) => {
@@ -138,6 +139,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
                           </label>
                           <div className="mt-2">
                             <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                              <span className="flex items-center text-gray-500">$</span>
                               <input
                                 id="price"
                                 name="price"

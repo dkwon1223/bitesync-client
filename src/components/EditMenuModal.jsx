@@ -1,5 +1,5 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import { PhotoIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
 
@@ -21,6 +21,7 @@ const EditMenuModal = ({
   });
   const [requiredInventoryItems, setRequiredInventoryItems] = useState([]);
   const [ingredientsDisabled, setIngredientsDisabled] = useState(true);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchMenuItem = async (userId, itemId, token) => {
     try {
@@ -72,11 +73,11 @@ const EditMenuModal = ({
       const data = await response.json();
       const parsedData = await data.map((item) => {
         return {
-            id: item.id,
-            quantityNeeded: item.quantityNeeded,
-            name: item.requiredInventoryItem.name
-        }
-      })
+          id: item.id,
+          quantityNeeded: item.quantityNeeded,
+          name: item.requiredInventoryItem.name,
+        };
+      });
       setRequiredInventoryItems(parsedData);
     } catch (error) {
       toast.error(await error.message, {
@@ -132,11 +133,11 @@ const EditMenuModal = ({
 
   const updateMenuInventory = async (inventoryItems, token) => {
     const baseUrl = "http://localhost:8080/api/menu-inventory";
-  
+
     try {
       const requests = inventoryItems.map((item) => {
         const { id, quantityNeeded } = item;
-  
+
         return fetch(`${baseUrl}/${id}`, {
           method: "PUT",
           headers: {
@@ -148,16 +149,15 @@ const EditMenuModal = ({
       });
 
       const responses = await Promise.all(requests);
-  
+
       const results = await Promise.all(
         responses.map((response) => {
           if (!response.ok) {
             throw new Error(Object.values(response.json()[0]));
           }
-          return response.json(); 
+          return response.json();
         })
       );
-  
       toast.success("Ingredients updated", {
         position: "top-center",
         autoClose: 1000,
@@ -168,15 +168,54 @@ const EditMenuModal = ({
         transition: Slide,
       });
     } catch (error) {
-        toast.error(await error.message, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            transition: Slide,
-          });
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    }
+  };
+
+  const deleteMenuInventory = async (ingredientId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/menu-inventory/${ingredientId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
+      }
+      toast.success("Ingredient deleted", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+      setDeleting(true);
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
     }
   };
 
@@ -185,7 +224,7 @@ const EditMenuModal = ({
       fetchMenuItem(userId, itemId, token);
       fetchRequiredInventoryItems(userId, itemId, token);
     }
-  }, [editing]);
+  }, [editing, deleting]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -212,16 +251,22 @@ const EditMenuModal = ({
 
   const handleIngredientUpdate = () => {
     updateMenuInventory(requiredInventoryItems, token);
-  }
+  };
+
+  const handleIngredientDelete = (e) => {
+    const { id } = e.target;
+    deleteMenuInventory(id);
+    setDeleting(false);
+  };
 
   const toggleIngredientsDisabled = () => {
-    if(ingredientsDisabled) {
-        setIngredientsDisabled(false);
+    if (ingredientsDisabled) {
+      setIngredientsDisabled(false);
     } else {
-        setIngredientsDisabled(true);
-        handleIngredientUpdate();
+      setIngredientsDisabled(true);
+      handleIngredientUpdate();
     }
-  }
+  };
 
   return (
     <Dialog open={editing} onClose={setEditing} className="relative z-40">
@@ -297,6 +342,9 @@ const EditMenuModal = ({
                           </label>
                           <div className="mt-2">
                             <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                              <span className="flex items-center text-gray-500">
+                                $
+                              </span>
                               <input
                                 id="price"
                                 name="price"
@@ -376,7 +424,7 @@ const EditMenuModal = ({
                         Update Menu Item Details
                       </button>
                     </div>
-                    <div className="h-12 w-full mt-8 px-4">
+                    <div className="h-12 w-full mt-2 px-4">
                       <div className="w-full flex justify-between py-2">
                         <h2 className="text-xl font-semibold text-gray-900 mb-4">
                           Menu Item Ingredients
@@ -407,12 +455,12 @@ const EditMenuModal = ({
                               scope="col"
                               className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                                <a
-                                  className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
-                                  onClick={toggleIngredientsDisabled}
-                                >
-                                  {ingredientsDisabled ? "Edit" : "Done"}
-                                </a>
+                              <a
+                                className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                                onClick={toggleIngredientsDisabled}
+                              >
+                                {ingredientsDisabled ? "Edit" : "Done"}
+                              </a>
                             </th>
                           </tr>
                         </thead>
@@ -424,18 +472,30 @@ const EditMenuModal = ({
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 <input
-                                id={item.id}
-                                name="quantityNeeded"
-                                type="number"
-                                min={0}
-                                step={1}
-                                disabled={ingredientsDisabled}
-                                onChange={handleIngredientChange}
-                                value={item.quantityNeeded}
-                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6 border border-gray-300 rounded-md"
+                                  id={item.id}
+                                  name="quantityNeeded"
+                                  type="number"
+                                  min={0}
+                                  step={1}
+                                  disabled={ingredientsDisabled}
+                                  onChange={handleIngredientChange}
+                                  value={item.quantityNeeded}
+                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6 border border-gray-300 rounded-md"
                                 />
                               </td>
-                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
+                              <td className="relative whitespace-nowrap py-4 pr-4 text-sm font-medium sm:pr-6 lg:pr-8">
+                                <button
+                                  className="relative text-gray-500 hover:text-red-400 flex justify-center items-center"
+                                  type="button"
+                                  id={item.id}
+                                  onClick={handleIngredientDelete}
+                                >
+                                  Delete
+                                  <TrashIcon
+                                    aria-hidden="true"
+                                    className="ml-2 size-5 text-inherit"
+                                  />
+                                </button>
                               </td>
                             </tr>
                           ))}
