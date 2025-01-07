@@ -41,6 +41,7 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Add Inventory: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,

@@ -44,6 +44,7 @@ const EditMenuModal = ({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Menu Item GET: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -82,6 +83,7 @@ const EditMenuModal = ({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Ingredients GET: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -121,6 +123,7 @@ const EditMenuModal = ({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Menu Item UPDATE: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -170,6 +173,7 @@ const EditMenuModal = ({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Ingredient UPDATE: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -209,6 +213,7 @@ const EditMenuModal = ({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Ingredient DELETE: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,

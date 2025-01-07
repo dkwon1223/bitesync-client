@@ -39,6 +39,7 @@ const Menu = () => {
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Menu: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -78,6 +79,7 @@ const Menu = () => {
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Menu Item: DELETE ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,

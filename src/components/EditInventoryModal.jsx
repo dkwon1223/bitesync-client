@@ -40,6 +40,7 @@ export default function EditInventoryModal({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Edit Inventory GET: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -79,6 +80,7 @@ export default function EditInventoryModal({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Edit Inventory UPDATE: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -117,6 +119,7 @@ export default function EditInventoryModal({
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Edit Inventory DELETE: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,

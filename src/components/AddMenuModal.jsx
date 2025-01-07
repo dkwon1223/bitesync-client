@@ -42,6 +42,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Add Menu: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
