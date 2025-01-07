@@ -3,7 +3,14 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
 
-const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMenu }) => {
+const EditMenuModal = ({
+  editing,
+  setEditing,
+  itemId,
+  userId,
+  token,
+  fetchUserMenu,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     imageUrl: "",
@@ -12,6 +19,8 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
     category: "",
     available: false,
   });
+  const [requiredInventoryItems, setRequiredInventoryItems] = useState([]);
+  const [ingredientsDisabled, setIngredientsDisabled] = useState(true);
 
   const fetchMenuItem = async (userId, itemId, token) => {
     try {
@@ -31,6 +40,44 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
       }
       const data = await response.json();
       setFormData(data);
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    }
+  };
+
+  const fetchRequiredInventoryItems = async (userId, itemId, token) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/menu-inventory/user/${userId}/menu/${itemId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(Object.values(data)[0]);
+      }
+      const data = await response.json();
+      const parsedData = await data.map((item) => {
+        return {
+            id: item.id,
+            quantityNeeded: item.quantityNeeded,
+            name: item.requiredInventoryItem.name
+        }
+      })
+      setRequiredInventoryItems(parsedData);
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
@@ -83,23 +130,98 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
     }
   };
 
-  useEffect(() => {
-    if(editing) {
-        fetchMenuItem(userId, itemId, token);
+  const updateMenuInventory = async (inventoryItems, token) => {
+    const baseUrl = "http://localhost:8080/api/menu-inventory";
+  
+    try {
+      const requests = inventoryItems.map((item) => {
+        const { id, quantityNeeded } = item;
+  
+        return fetch(`${baseUrl}/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ quantityNeeded }),
+        });
+      });
+
+      const responses = await Promise.all(requests);
+  
+      const results = await Promise.all(
+        responses.map((response) => {
+          if (!response.ok) {
+            throw new Error(Object.values(response.json()[0]));
+          }
+          return response.json(); 
+        })
+      );
+  
+      toast.success("Ingredients updated", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    } catch (error) {
+        toast.error(await error.message, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            transition: Slide,
+          });
     }
-  }, [editing])
+  };
+
+  useEffect(() => {
+    if (editing) {
+      fetchMenuItem(userId, itemId, token);
+      fetchRequiredInventoryItems(userId, itemId, token);
+    }
+  }, [editing]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleIngredientChange = (e) => {
+    const { value, id } = e.target;
+    setRequiredInventoryItems((prevInventoryItems) =>
+      prevInventoryItems.map((item) =>
+        item.id === parseInt(id)
+          ? { ...item, quantityNeeded: parseInt(value) }
+          : item
+      )
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateMenuItem(userId, itemId, token)
+    updateMenuItem(userId, itemId, token);
     setEditing(false);
     fetchUserMenu(token, userId);
   };
+
+  const handleIngredientUpdate = () => {
+    updateMenuInventory(requiredInventoryItems, token);
+  }
+
+  const toggleIngredientsDisabled = () => {
+    if(ingredientsDisabled) {
+        setIngredientsDisabled(false);
+    } else {
+        setIngredientsDisabled(true);
+        handleIngredientUpdate();
+    }
+  }
 
   return (
     <Dialog open={editing} onClose={setEditing} className="relative z-40">
@@ -117,11 +239,11 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
             <div>
               <form onSubmit={handleSubmit}>
                 <div className="space-y-12">
-                  <div className="border-b border-gray-900/10 pb-4">
+                  <div className="border-b border-gray-900/10 pb-4 flex flex-col overflow-y-auto">
                     <h2 className="text-xl font-semibold text-gray-900">
                       Update Menu Item
                     </h2>
-                    <div className="mt-10 flex justify-between flex-grow sm:grid-cols-6">
+                    <div className="mt-10 flex justify-between flex-grow sm:grid-cols-6 overflow-y-auto">
                       <div className="w-1/2 pr-12 flex flex-col justify-evenly">
                         <div className="sm:col-span-4">
                           <label
@@ -236,20 +358,89 @@ const EditMenuModal = ({ editing, setEditing, itemId, userId, token, fetchUserMe
                         </div>
                         <div className="flex justify-center items-center mt-4">
                           {formData.imageUrl ? (
-                            <img src={formData.imageUrl} className="max-h-52 rounded-lg"/>
+                            <img
+                              src={formData.imageUrl}
+                              className="max-h-52 rounded-lg"
+                            />
                           ) : (
                             <PhotoIcon className="w-3/4" />
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="mt-6 flex items-center justify-end gap-x-6">
+                    <div className="my-4 pb-4 flex items-center justify-end gap-x-6 border-b-2 border-gray-300">
                       <button
                         type="submit"
                         className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
-                        Update Menu Item
+                        Update Menu Item Details
                       </button>
+                    </div>
+                    <div className="h-12 w-full mt-8 px-4">
+                      <div className="w-full flex justify-between py-2">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                          Menu Item Ingredients
+                        </h2>
+                        <button
+                          type="button"
+                          className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                          Add Required Inventory/Ingredient
+                        </button>
+                      </div>
+                      <table className="min-w-full">
+                        <thead className="sticky top-0 z-30 bg-[#F6FAFE] shadow-md">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                            >
+                              Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
+                            >
+                              Quanity Required
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
+                            >
+                                <a
+                                  className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                                  onClick={toggleIngredientsDisabled}
+                                >
+                                  {ingredientsDisabled ? "Edit" : "Done"}
+                                </a>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-300 bg-white">
+                          {requiredInventoryItems.map((item) => (
+                            <tr key={item.id}>
+                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                                {item.name}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <input
+                                id={item.id}
+                                name="quantityNeeded"
+                                type="number"
+                                min={0}
+                                step={1}
+                                disabled={ingredientsDisabled}
+                                onChange={handleIngredientChange}
+                                value={item.quantityNeeded}
+                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6 border border-gray-300 rounded-md"
+                                />
+                              </td>
+                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
