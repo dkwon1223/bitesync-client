@@ -100,6 +100,8 @@ const Menu = () => {
   };
 
   const handleUpdate = (e) => {
+    console.log(e.target);
+    
     setItemId(e.target.id);
     setEditing(true);
   };
@@ -220,7 +222,7 @@ const Menu = () => {
                   >
                     <ListBulletIcon
                       aria-hidden="true"
-                      className="size-5 text-gray-400"
+                      className="size-5 text-gray-400 pointer-events-none"
                     />
                     Edit
                   </button>
@@ -233,7 +235,7 @@ const Menu = () => {
                   >
                     <TrashIcon
                       aria-hidden="true"
-                      className="size-5 text-gray-400"
+                      className="size-5 text-gray-400 pointer-events-none"
                     />
                     Delete
                   </button>

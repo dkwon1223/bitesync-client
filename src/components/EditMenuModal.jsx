@@ -24,6 +24,7 @@ const EditMenuModal = ({
   const [ingredientsDisabled, setIngredientsDisabled] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [addingIngredients, setAddingIngredients] = useState(false);
+  const [updateDisabled, setUpdateDisabled] = useState(true);
 
   const fetchMenuItem = async (userId, itemId, token) => {
     try {
@@ -234,6 +235,7 @@ const EditMenuModal = ({
   }, [editing, deleting, addingIngredients]);
 
   const handleChange = (e) => {
+    setUpdateDisabled(false);
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -281,7 +283,10 @@ const EditMenuModal = ({
       return item.id;
       })} 
       />
-      <Dialog open={editing} onClose={setEditing} className="relative z-40">
+      <Dialog open={editing} onClose={() => {
+        setEditing(false);
+        setUpdateDisabled(true);
+      }} className="relative z-40">
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -431,7 +436,8 @@ const EditMenuModal = ({
                       <div className="my-4 pb-4 flex items-center justify-end gap-x-6 border-b-2 border-gray-300">
                         <button
                           type="submit"
-                          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                          disabled={updateDisabled}
+                          className={updateDisabled ? "rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-not-allowed" : "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"}
                         >
                           Update Menu Item Details
                         </button>
@@ -506,7 +512,7 @@ const EditMenuModal = ({
                                     Delete
                                     <TrashIcon
                                       aria-hidden="true"
-                                      className="ml-2 size-5 text-inherit"
+                                      className="ml-2 size-5 text-inherit pointer-events-none"
                                     />
                                   </button>
                                 </td>

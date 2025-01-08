@@ -9,7 +9,6 @@ const AddRequiredIngredientModal = ({
   setAddingIngredients,
   menuItemId,
   menuItemName,
-  setEditing,
   requiredInventoryItems,
 }) => {
   const { token, userId } = useContext(AuthContext);
@@ -258,7 +257,7 @@ const AddRequiredIngredientModal = ({
                               Remove
                               <TrashIcon
                                 aria-hidden="true"
-                                className="ml-2 size-5 text-inherit"
+                                className="ml-2 size-5 text-inherit pointer-events-none"
                               />
                             </button>
                           </div>
