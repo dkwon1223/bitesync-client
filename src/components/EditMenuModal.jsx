@@ -231,7 +231,7 @@ const EditMenuModal = ({
       fetchMenuItem(userId, itemId, token);
       fetchRequiredInventoryItems(userId, itemId, token);
     }
-  }, [editing, deleting]);
+  }, [editing, deleting, addingIngredients]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -277,7 +277,7 @@ const EditMenuModal = ({
 
   return (
     <>
-      <AddRequiredIngredientModal addingIngredients={addingIngredients} setAddingIngredients={setAddingIngredients} menuItemId={itemId} menuItemName={formData.name} requiredInventoryItems={requiredInventoryItems.map((item) => {
+      <AddRequiredIngredientModal addingIngredients={addingIngredients} setAddingIngredients={setAddingIngredients} menuItemId={itemId} menuItemName={formData.name} setEditing={setEditing} requiredInventoryItems={requiredInventoryItems.map((item) => {
       return item.id;
       })} 
       />

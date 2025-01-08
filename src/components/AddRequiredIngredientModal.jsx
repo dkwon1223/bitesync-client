@@ -9,13 +9,13 @@ const AddRequiredIngredientModal = ({
   setAddingIngredients,
   menuItemId,
   menuItemName,
+  setEditing,
   requiredInventoryItems,
 }) => {
   const { token, userId } = useContext(AuthContext);
   const [inventoryItems, setInventoryItems] = useState([]);
   const [ingredientsToAdd, setIngredientsToAdd] = useState([]);
   const [removingIngredient, setRemovingIngredient] = useState(false);
-  const [requestData, setRequestData] = useState([]);
 
   const fetchUserInventory = async (token, userId) => {
     try {
@@ -51,6 +51,58 @@ const AddRequiredIngredientModal = ({
       });
     }
   };
+
+  const postIngredients = async () => {
+    const baseUrl = `http://localhost:8080/api/menu-inventory/user/${userId}`;
+
+    try {
+      const requests = ingredientsToAdd.map((item) => {
+        const { id, quantityNeeded } = item;
+
+        return fetch(`${baseUrl}/inventory-item/${id}/menu-item/${menuItemId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ quantityNeeded: quantityNeeded }),
+        });
+      });
+
+      const responses = await Promise.all(requests);
+
+      const results = await Promise.all(
+        responses.map((response) => {
+          if (!response.ok) {
+            throw new Error(Object.values(response.json()[0]));
+          }
+          return response.json();
+        })
+      );
+      toast.success("Ingredients updated", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+      setAddingIngredients(false);
+      setIngredientsToAdd([]);
+    } catch (error) {
+      toast.error(await error.message, {
+        position: "top-center",
+        toastId: `Ingredient UPDATE: ${error.message}`,
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Slide,
+      });
+    }
+  }
 
   useEffect(() => {
     fetchUserInventory(token, userId);
@@ -107,6 +159,7 @@ const AddRequiredIngredientModal = ({
               <div className="w-full flex justify-end my-4 px-4">
                 <button
                   type="button"
+                  onClick={postIngredients}
                   className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Add Ingredient(s)
