@@ -174,7 +174,7 @@ const Menu = () => {
                   ) : (
                     <XCircleIcon
                       aria-hidden="true"
-                      className="size-5 text-red-400"
+                      className="size-7 text-red-400"
                     />
                   )}
                 </p>

@@ -15,10 +15,10 @@ const Navbar = () => {
   return (
     <nav className="h-full w-full flex flex-col justify-start items-start space-y-6 pt-4 text-white font-sans lg:flex lg:space-y-0">
       <div
-        className="flex justify-center items-center h-12 w-[90%] cursor-pointer mb-4 ml-3"
+        className="flex justify-center items-center h-12 w-[90%] cursor-pointer mb-4 ml-2 border-b-2 border-white pb-4"
         onClick={() => navigate("/")}
       >
-        <img src={AppIcon} alt="BiteSync logo" className="w-1/5 mr-2" />
+        <img src={AppIcon} alt="BiteSync logo" className="w-1/5 mr-4" />
         <h1 className="font-extrabold text-xl w-3/4 text-center lg:text-left">
           BiteSync
         </h1>

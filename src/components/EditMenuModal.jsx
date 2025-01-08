@@ -1,5 +1,5 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import { PhotoIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PhotoIcon, TrashIcon, XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
 import AddRequiredIngredientModal from "./AddRequiredIngredientModal";
@@ -279,14 +279,24 @@ const EditMenuModal = ({
 
   return (
     <>
-      <AddRequiredIngredientModal addingIngredients={addingIngredients} setAddingIngredients={setAddingIngredients} menuItemId={itemId} menuItemName={formData.name} setEditing={setEditing} requiredInventoryItems={requiredInventoryItems.map((item) => {
-      return item.id;
-      })} 
+      <AddRequiredIngredientModal
+        addingIngredients={addingIngredients}
+        setAddingIngredients={setAddingIngredients}
+        menuItemId={itemId}
+        menuItemName={formData.name}
+        setEditing={setEditing}
+        requiredInventoryItems={requiredInventoryItems.map((item) => {
+          return item.id;
+        })}
       />
-      <Dialog open={editing} onClose={() => {
-        setEditing(false);
-        setUpdateDisabled(true);
-      }} className="relative z-40">
+      <Dialog
+        open={editing}
+        onClose={() => {
+          setEditing(false);
+          setUpdateDisabled(true);
+        }}
+        className="relative z-40"
+      >
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -314,7 +324,7 @@ const EditMenuModal = ({
                             >
                               Name
                             </label>
-                            <div className="mt-2">
+                            <div>
                               <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                                 <input
                                   id="name"
@@ -332,11 +342,11 @@ const EditMenuModal = ({
                           <div className="sm:col-span-4">
                             <label
                               htmlFor="description"
-                              className="block text-sm/6 font-medium text-gray-900"
+                              className="block text-sm/6 font-medium text-gray-900 mt-2"
                             >
                               Description
                             </label>
-                            <div className="mt-2">
+                            <div>
                               <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                                 <textarea
                                   id="description"
@@ -353,11 +363,11 @@ const EditMenuModal = ({
                           <div className="sm:col-span-4">
                             <label
                               htmlFor="price"
-                              className="block text-sm/6 font-medium text-gray-900"
+                              className="block text-sm/6 font-medium text-gray-900 mt-2"
                             >
                               Price
                             </label>
-                            <div className="mt-2">
+                            <div>
                               <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                                 <span className="flex items-center text-gray-500">
                                   $
@@ -380,11 +390,11 @@ const EditMenuModal = ({
                           <div className="sm:col-span-4">
                             <label
                               htmlFor="category"
-                              className="block text-sm/6 font-medium text-gray-900"
+                              className="block text-sm/6 font-medium text-gray-900 mt-2"
                             >
                               Category
                             </label>
-                            <div className="mt-2">
+                            <div>
                               <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                                 <input
                                   id="category"
@@ -399,6 +409,43 @@ const EditMenuModal = ({
                               </div>
                             </div>
                           </div>
+                          <div className="sm:col-span-4">
+                            <label
+                              htmlFor="available"
+                              className="block text-sm/6 font-medium text-gray-900 mt-2"
+                            >
+                              Available
+                            </label>
+                            <div>
+                              <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                                {formData.available ? (
+                                  <CheckCircleIcon
+                                    aria-hidden="true"
+                                    className="size-5 text-green-400"
+                                  />
+                                ) : (
+                                  <XCircleIcon
+                                    aria-hidden="true"
+                                    className="size-5 text-red-400"
+                                  />
+                                )}
+                                <input
+                                  id="available"
+                                  name="available"
+                                  type="text"
+                                  placeholder="item available"
+                                  disabled
+                                  value={
+                                    formData.available
+                                      ? "available"
+                                      : "not available"
+                                  }
+                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-xs text-red-400">Availability can only be modified by adding associated inventory/ingredients</p>
                         </div>
                         <div className="w-1/2 max-h-36">
                           <div className="col-span-full">
@@ -437,7 +484,11 @@ const EditMenuModal = ({
                         <button
                           type="submit"
                           disabled={updateDisabled}
-                          className={updateDisabled ? "rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-not-allowed" : "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"}
+                          className={
+                            updateDisabled
+                              ? "rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-not-allowed"
+                              : "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                          }
                         >
                           Update Menu Item Details
                         </button>
