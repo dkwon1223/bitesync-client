@@ -15,7 +15,7 @@ const AddRequiredIngredientModal = ({
   const [inventoryItems, setInventoryItems] = useState([]);
   const [ingredientsToAdd, setIngredientsToAdd] = useState([]);
   const [removingIngredient, setRemovingIngredient] = useState(false);
-  const [requestData, setRequestData] = useState({});
+  const [requestData, setRequestData] = useState([]);
 
   const fetchUserInventory = async (token, userId) => {
     try {
@@ -57,10 +57,10 @@ const AddRequiredIngredientModal = ({
   }, [addingIngredients, removingIngredient]);
 
   const handleAddIngredient = (ingredient) => {
+    ingredient.quantityNeeded = 1;
     setInventoryItems(() => inventoryItems.filter((item) => {
       return item.id !== ingredient.id;
     }))
-    
     setIngredientsToAdd([...ingredientsToAdd, ingredient]);
   };
 
@@ -72,10 +72,22 @@ const AddRequiredIngredientModal = ({
     setInventoryItems([...inventoryItems, data]);
   }
 
+  const handleQuantityChange = (e) => {
+    const { id, value } = e.target;
+    setIngredientsToAdd((ingredientsToAdd) => ingredientsToAdd.map((item) => {
+      if(item.id = id) {
+        return {...item, quantityNeeded: value }
+      }
+    }))
+  }
+
   return (
     <Dialog
       open={addingIngredients}
-      onClose={setAddingIngredients}
+      onClose={() => {
+        setAddingIngredients(false);
+        setIngredientsToAdd([]);
+      }}
       className="relative z-40"
     >
       <DialogBackdrop
@@ -178,9 +190,10 @@ const AddRequiredIngredientModal = ({
                               id={item.id}
                               name="quantityNeeded"
                               type="number"
-                              min={0}
+                              min={1}
                               step={1}
-                              value={0}
+                              value={item.quantityNeeded}
+                              onChange={handleQuantityChange}
                               className="block min-w-0 max-w-24 grow py-1.5 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6 border border-gray-300 rounded-md"
                             />
                             <button
