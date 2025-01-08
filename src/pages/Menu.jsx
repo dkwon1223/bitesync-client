@@ -100,8 +100,6 @@ const Menu = () => {
   };
 
   const handleUpdate = (e) => {
-    console.log(e.target);
-    
     setItemId(e.target.id);
     setEditing(true);
   };
@@ -207,9 +205,9 @@ const Menu = () => {
                 </div>
               </div>
               <img
-                alt=""
+                alt={`${item.name}`}
                 src={item.imageUrl}
-                className="size-20 shrink-0 rounded-full bg-gray-300 object-contain"
+                className="size-20 shrink-0 rounded-full bg-gray-300 object-cover"
               />
             </div>
             <div>
