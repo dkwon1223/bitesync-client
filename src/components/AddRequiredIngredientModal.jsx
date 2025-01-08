@@ -14,6 +14,9 @@ const AddRequiredIngredientModal = ({
   const { token, userId } = useContext(AuthContext);
   const [inventoryItems, setInventoryItems] = useState([]);
   const [ingredientsToAdd, setIngredientsToAdd] = useState([]);
+  const [removingIngredient, setRemovingIngredient] = useState(false);
+  const [requestData, setRequestData] = useState({});
+
   const fetchUserInventory = async (token, userId) => {
     try {
       const response = await fetch(
@@ -51,16 +54,22 @@ const AddRequiredIngredientModal = ({
 
   useEffect(() => {
     fetchUserInventory(token, userId);
-  }, [addingIngredients, ingredientsToAdd]);
+  }, [addingIngredients, removingIngredient]);
 
   const handleAddIngredient = (ingredient) => {
+    setInventoryItems(() => inventoryItems.filter((item) => {
+      return item.id !== ingredient.id;
+    }))
+    
     setIngredientsToAdd([...ingredientsToAdd, ingredient]);
   };
 
-  const handleRemoveIngredient = (e) => {
+  const handleRemoveIngredient = (e, data) => {
+    setRemovingIngredient(true);
     setIngredientsToAdd((ingredientsToAdd) => ingredientsToAdd.filter((item) => {
       return item.id !== parseInt(e.target.id);
     }))
+    setInventoryItems([...inventoryItems, data]);
   }
 
   return (
@@ -177,7 +186,7 @@ const AddRequiredIngredientModal = ({
                             <button
                               className="relative text-gray-500 hover:text-red-400 flex justify-center items-center ml-4"
                               type="button"
-                              onClick={handleRemoveIngredient}
+                              onClick={(e) => handleRemoveIngredient(e, item)}
                               id={item.id}
                             >
                               Remove
