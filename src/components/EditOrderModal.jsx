@@ -14,6 +14,7 @@ const EditOrderModal = ({ editing, setEditing, token, userId, orderId }) => {
     total: 0,
     orderDate: "",
   });
+  const [isOpen, setIsOpen] = useState(false);
 
   const fetchSingleOrder = async () => {
     try {
@@ -52,10 +53,14 @@ const EditOrderModal = ({ editing, setEditing, token, userId, orderId }) => {
   };
 
   useEffect(() => {
-    if(editing) {
-        fetchSingleOrder();
+    if (editing) {
+      fetchSingleOrder();
     }
   }, [editing]);
+
+  const toggleDropDown = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <Dialog
@@ -132,16 +137,71 @@ const EditOrderModal = ({ editing, setEditing, token, userId, orderId }) => {
                       />
                     </dt>
                     <dd className="text-sm/6 text-gray-500">
-                      Paid with MasterCard
+                      Paid with Visa ending in 1234
                     </dd>
                   </div>
                 </dl>
                 <div className="mt-6 border-t border-gray-900/5 px-6 py-6">
-                  <a href="#" className="text-sm/6 font-semibold text-gray-900">
-                    Download receipt <span aria-hidden="true">&rarr;</span>
-                  </a>
+                  {isOpen ? (
+                    <button
+                      className="text-sm/6 font-semibold text-gray-900"
+                      type="button"
+                      onClick={toggleDropDown}
+                    >
+                      Close receipt <span aria-hidden="true">&uarr;</span>
+                    </button>
+                  ) : (
+                    <button
+                      className="text-sm/6 font-semibold text-gray-900"
+                      type="button"
+                      onClick={toggleDropDown}
+                    >
+                      View receipt <span aria-hidden="true">&darr;</span>
+                    </button>
+                  )}
+                  {isOpen && (
+                    <div className="mt-4">
+                      <h2 className="text-lg font-semibold mb-2">Order Summary</h2>
+                      <div className="border-b-2 border-gray-400">
+                        <div className="grid grid-cols-3 gap-4 font-semibold text-sm/6 text-gray-600 border-b-2 border-gray-400">
+                          <span>Item Name</span>
+                          <span className="text-center">Quantity</span>
+                          <span className="text-right">Subtotal</span>
+                        </div>
+                        {order.orderItems.map((item) => (
+                          <div
+                            key={item.id}
+                            className="grid grid-cols-3 gap-4 text-sm/6 text-gray-500 py-1 border-b border-gray-300 last:border-none"
+                          >
+                            <span>{item.menuItem.name}</span>
+                            <span className="text-center">{item.quantity}</span>
+                            <span className="text-right">
+                              ${item.subtotal.toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 pt-2">
+                        <div className="grid grid-cols-2 gap-4 font-semibold">
+                          <span>Total:</span>
+                          <span className="text-right">
+                            ${order.total.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
+            </div>
+            <div className="mt-5 sm:mt-6">
+              <button
+                type="button"
+                onClick={() => setEditing(false)}
+                className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Go back to Orders
+              </button>
             </div>
           </DialogPanel>
         </div>
