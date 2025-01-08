@@ -560,7 +560,7 @@ const EditMenuModal = ({
                                     id={item.id}
                                     onClick={handleIngredientDelete}
                                   >
-                                    Delete
+                                    Remove
                                     <TrashIcon
                                       aria-hidden="true"
                                       className="ml-2 size-5 text-inherit pointer-events-none"
