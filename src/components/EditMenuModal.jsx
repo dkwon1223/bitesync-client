@@ -2,6 +2,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PhotoIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
+import AddRequiredIngredientModal from "./AddRequiredIngredientModal";
 
 const EditMenuModal = ({
   editing,
@@ -22,6 +23,7 @@ const EditMenuModal = ({
   const [requiredInventoryItems, setRequiredInventoryItems] = useState([]);
   const [ingredientsDisabled, setIngredientsDisabled] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [addingIngredients, setAddingIngredients] = useState(false);
 
   const fetchMenuItem = async (userId, itemId, token) => {
     try {
@@ -274,256 +276,263 @@ const EditMenuModal = ({
   };
 
   return (
-    <Dialog open={editing} onClose={setEditing} className="relative z-40">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+    <>
+      <AddRequiredIngredientModal addingIngredients={addingIngredients} setAddingIngredients={setAddingIngredients} menuItemId={itemId} menuItemName={formData.name} requiredInventoryItems={requiredInventoryItems.map((item) => {
+      return item.id;
+      })} 
       />
+      <Dialog open={editing} onClose={setEditing} className="relative z-40">
+        <DialogBackdrop
+          transition
+          className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        />
 
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <DialogPanel
-            transition
-            className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-sm lg:w-full lg:max-w-3xl sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
-          >
-            <div>
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-12">
-                  <div className="border-b border-gray-900/10 pb-4 flex flex-col overflow-y-auto">
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      Update Menu Item
-                    </h2>
-                    <div className="mt-10 flex justify-between flex-grow sm:grid-cols-6 overflow-y-auto">
-                      <div className="w-1/2 pr-12 flex flex-col justify-evenly">
-                        <div className="sm:col-span-4">
-                          <label
-                            htmlFor="name"
-                            className="block text-sm/6 font-medium text-gray-900"
-                          >
-                            Name
-                          </label>
-                          <div className="mt-2">
-                            <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                              <input
-                                id="name"
-                                name="name"
-                                type="text"
-                                placeholder="name of item"
-                                required
-                                onChange={handleChange}
-                                value={formData.name}
-                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="sm:col-span-4">
-                          <label
-                            htmlFor="description"
-                            className="block text-sm/6 font-medium text-gray-900"
-                          >
-                            Description
-                          </label>
-                          <div className="mt-2">
-                            <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                              <textarea
-                                id="description"
-                                name="description"
-                                placeholder="description of item"
-                                required
-                                onChange={handleChange}
-                                value={formData.description}
-                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                              ></textarea>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="sm:col-span-4">
-                          <label
-                            htmlFor="price"
-                            className="block text-sm/6 font-medium text-gray-900"
-                          >
-                            Price
-                          </label>
-                          <div className="mt-2">
-                            <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                              <span className="flex items-center text-gray-500">
-                                $
-                              </span>
-                              <input
-                                id="price"
-                                name="price"
-                                type="number"
-                                min={0.01}
-                                step={0.01}
-                                placeholder="unit price of items"
-                                required
-                                onChange={handleChange}
-                                value={formData.price}
-                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="sm:col-span-4">
-                          <label
-                            htmlFor="category"
-                            className="block text-sm/6 font-medium text-gray-900"
-                          >
-                            Category
-                          </label>
-                          <div className="mt-2">
-                            <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                              <input
-                                id="category"
-                                name="category"
-                                type="text"
-                                placeholder="item category"
-                                required
-                                onChange={handleChange}
-                                value={formData.category}
-                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-1/2 max-h-36">
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="imageUrl"
-                            className="block text-sm/6 font-medium text-gray-900"
-                          >
-                            Image URL
-                          </label>
-                          <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                            <input
-                              id="imageUrl"
-                              name="imageUrl"
-                              type="text"
-                              placeholder="item image url"
-                              required
-                              onChange={handleChange}
-                              value={formData.imageUrl}
-                              className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex justify-center items-center mt-4">
-                          {formData.imageUrl ? (
-                            <img
-                              src={formData.imageUrl}
-                              className="max-h-52 rounded-lg"
-                            />
-                          ) : (
-                            <PhotoIcon className="w-3/4" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="my-4 pb-4 flex items-center justify-end gap-x-6 border-b-2 border-gray-300">
-                      <button
-                        type="submit"
-                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      >
-                        Update Menu Item Details
-                      </button>
-                    </div>
-                    <div className="h-12 w-full mt-2 px-4">
-                      <div className="w-full flex justify-between py-2">
-                        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                          Menu Item Ingredients
-                        </h2>
-                        <button
-                          type="button"
-                          className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                          Add Required Inventory/Ingredient
-                        </button>
-                      </div>
-                      <table className="min-w-full">
-                        <thead className="sticky top-0 z-30 bg-[#F6FAFE] shadow-md">
-                          <tr>
-                            <th
-                              scope="col"
-                              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <DialogPanel
+              transition
+              className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-sm lg:w-full lg:max-w-3xl sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
+            >
+              <div>
+                <form onSubmit={handleSubmit}>
+                  <div className="space-y-12">
+                    <div className="border-b border-gray-900/10 pb-4 flex flex-col overflow-y-auto">
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        Update Menu Item
+                      </h2>
+                      <div className="mt-10 flex justify-between flex-grow sm:grid-cols-6 overflow-y-auto">
+                        <div className="w-1/2 pr-12 flex flex-col justify-evenly">
+                          <div className="sm:col-span-4">
+                            <label
+                              htmlFor="name"
+                              className="block text-sm/6 font-medium text-gray-900"
                             >
                               Name
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
-                            >
-                              Quanity Required
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
-                            >
-                              <a
-                                className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
-                                onClick={toggleIngredientsDisabled}
-                              >
-                                {ingredientsDisabled ? "Edit" : "Done"}
-                              </a>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-300 bg-white">
-                          {requiredInventoryItems.map((item) => (
-                            <tr key={item.id}>
-                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
-                                {item.name}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            </label>
+                            <div className="mt-2">
+                              <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                                 <input
-                                  id={item.id}
-                                  name="quantityNeeded"
-                                  type="number"
-                                  min={0}
-                                  step={1}
-                                  disabled={ingredientsDisabled}
-                                  onChange={handleIngredientChange}
-                                  value={item.quantityNeeded}
-                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6 border border-gray-300 rounded-md"
+                                  id="name"
+                                  name="name"
+                                  type="text"
+                                  placeholder="name of item"
+                                  required
+                                  onChange={handleChange}
+                                  value={formData.name}
+                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                                 />
-                              </td>
-                              <td className="relative whitespace-nowrap py-4 pr-4 text-sm font-medium sm:pr-6 lg:pr-8">
-                                <button
-                                  className="relative text-gray-500 hover:text-red-400 flex justify-center items-center"
-                                  type="button"
-                                  id={item.id}
-                                  onClick={handleIngredientDelete}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="sm:col-span-4">
+                            <label
+                              htmlFor="description"
+                              className="block text-sm/6 font-medium text-gray-900"
+                            >
+                              Description
+                            </label>
+                            <div className="mt-2">
+                              <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                                <textarea
+                                  id="description"
+                                  name="description"
+                                  placeholder="description of item"
+                                  required
+                                  onChange={handleChange}
+                                  value={formData.description}
+                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                                ></textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="sm:col-span-4">
+                            <label
+                              htmlFor="price"
+                              className="block text-sm/6 font-medium text-gray-900"
+                            >
+                              Price
+                            </label>
+                            <div className="mt-2">
+                              <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                                <span className="flex items-center text-gray-500">
+                                  $
+                                </span>
+                                <input
+                                  id="price"
+                                  name="price"
+                                  type="number"
+                                  min={0.01}
+                                  step={0.01}
+                                  placeholder="unit price of items"
+                                  required
+                                  onChange={handleChange}
+                                  value={formData.price}
+                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="sm:col-span-4">
+                            <label
+                              htmlFor="category"
+                              className="block text-sm/6 font-medium text-gray-900"
+                            >
+                              Category
+                            </label>
+                            <div className="mt-2">
+                              <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                                <input
+                                  id="category"
+                                  name="category"
+                                  type="text"
+                                  placeholder="item category"
+                                  required
+                                  onChange={handleChange}
+                                  value={formData.category}
+                                  className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="w-1/2 max-h-36">
+                          <div className="col-span-full">
+                            <label
+                              htmlFor="imageUrl"
+                              className="block text-sm/6 font-medium text-gray-900"
+                            >
+                              Image URL
+                            </label>
+                            <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                              <input
+                                id="imageUrl"
+                                name="imageUrl"
+                                type="text"
+                                placeholder="item image url"
+                                required
+                                onChange={handleChange}
+                                value={formData.imageUrl}
+                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-center items-center mt-4">
+                            {formData.imageUrl ? (
+                              <img
+                                src={formData.imageUrl}
+                                className="max-h-52 rounded-lg"
+                              />
+                            ) : (
+                              <PhotoIcon className="w-3/4" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="my-4 pb-4 flex items-center justify-end gap-x-6 border-b-2 border-gray-300">
+                        <button
+                          type="submit"
+                          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                          Update Menu Item Details
+                        </button>
+                      </div>
+                      <div className="h-12 w-full mt-2 px-4">
+                        <div className="w-full flex justify-between py-2">
+                          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                            Menu Item Ingredients
+                          </h2>
+                          <button
+                            type="button"
+                            onClick={() => setAddingIngredients(true)}
+                            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                          >
+                            Add Required Inventory/Ingredient
+                          </button>
+                        </div>
+                        <table className="min-w-full">
+                          <thead className="sticky top-0 z-30 bg-[#F6FAFE] shadow-md">
+                            <tr>
+                              <th
+                                scope="col"
+                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                              >
+                                Name
+                              </th>
+                              <th
+                                scope="col"
+                                className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
+                              >
+                                Quanity Required
+                              </th>
+                              <th
+                                scope="col"
+                                className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900"
+                              >
+                                <a
+                                  className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                                  onClick={toggleIngredientsDisabled}
                                 >
-                                  Delete
-                                  <TrashIcon
-                                    aria-hidden="true"
-                                    className="ml-2 size-5 text-inherit"
-                                  />
-                                </button>
-                              </td>
+                                  {ingredientsDisabled ? "Edit" : "Done"}
+                                </a>
+                              </th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="divide-y divide-gray-300 bg-white">
+                            {requiredInventoryItems.map((item) => (
+                              <tr key={item.id}>
+                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                                  {item.name}
+                                </td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                  <input
+                                    id={item.id}
+                                    name="quantityNeeded"
+                                    type="number"
+                                    min={0}
+                                    step={1}
+                                    disabled={ingredientsDisabled}
+                                    onChange={handleIngredientChange}
+                                    value={item.quantityNeeded}
+                                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6 border border-gray-300 rounded-md"
+                                  />
+                                </td>
+                                <td className="relative whitespace-nowrap py-4 pr-4 text-sm font-medium sm:pr-6 lg:pr-8">
+                                  <button
+                                    className="relative text-gray-500 hover:text-red-400 flex justify-center items-center"
+                                    type="button"
+                                    id={item.id}
+                                    onClick={handleIngredientDelete}
+                                  >
+                                    Delete
+                                    <TrashIcon
+                                      aria-hidden="true"
+                                      className="ml-2 size-5 text-inherit"
+                                    />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </form>
-            </div>
-            <div className="mt-5 sm:mt-6">
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Go back to Menu Items
-              </button>
-            </div>
-          </DialogPanel>
+                </form>
+              </div>
+              <div className="mt-5 sm:mt-6">
+                <button
+                  type="button"
+                  onClick={() => setEditing(false)}
+                  className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Go back to Menu Items
+                </button>
+              </div>
+            </DialogPanel>
+          </div>
         </div>
-      </div>
-    </Dialog>
+      </Dialog>
+    </>
   );
 };
 

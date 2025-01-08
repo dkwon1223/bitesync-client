@@ -125,7 +125,7 @@ const Menu = () => {
         token={token}
         fetchUserMenu={fetchUserMenu}
       />
-      <div className="sm:flex sm:items-center h-[10%] mb-8">
+      <div className="sm:flex sm:items-center h-[10%] mb-8 border-b-2 border-gray-300">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
             Your Menu Items
