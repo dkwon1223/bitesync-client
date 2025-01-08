@@ -153,18 +153,24 @@ const Menu = () => {
           >
             <div className="flex w-full items-center justify-between space-x-6 p-6">
               <div className="flex-1 truncate">
-                <div className="flex items-center space-x-3">
-                  <h3 className="truncate text-sm font-medium text-gray-900">
-                    {item.name}
-                  </h3>
-                  <span className="inline-flex shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    {item.category}
-                  </span>
+                <div className="flex">
+                  <div className="flex flex-col space-y-2 w-1/2">
+                    <h3 className="px-1 truncate text-sm font-medium text-gray-900">
+                      {item.name}
+                    </h3>
+                    <span className="w-min inline-flex shrink-0 items-center justify-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      {item.category}
+                    </span>
+                  </div>
+                  <div className="w-1/2 flex justify-end items-center">
+                    <img
+                      alt={`${item.name}`}
+                      src={item.imageUrl}
+                      className="size-14 shrink-0 rounded-full bg-gray-300 object-cover"
+                    />
+                  </div>
                 </div>
-                <p className="mt-1 truncate text-sm text-gray-500 my-8">
-                  {item.description}
-                </p>
-                <p className="my-4 flex justify-between items-center">
+                <p className="my-4 flex justify-between items-center text-sm font-light">
                   Available:{" "}
                   {item.available ? (
                     <CheckCircleIcon
@@ -174,7 +180,7 @@ const Menu = () => {
                   ) : (
                     <XCircleIcon
                       aria-hidden="true"
-                      className="size-5 text-red-400"
+                      className="size-7 text-red-400"
                     />
                   )}
                 </p>
@@ -184,31 +190,34 @@ const Menu = () => {
                     { label: "Ingredient Cost", value: item.costToMake },
                     {
                       label: "Gross Profit",
-                      value: item.price - item.costToMake,
+                      value:
+                        item.costToMake === 0
+                          ? 0
+                          : item.price - item.costToMake,
                     },
                   ].map((entry, index) => (
-                    <div key={`id-${item.id}-name-${item.name}${index}-label`} className="contents">
-                      <span className="text-gray-800">
+                    <div
+                      key={`id-${item.id}-name-${item.name}${index}-label`}
+                      className="contents"
+                    >
+                      <span className="text-gray-800 text-xs font-light w-1/2">
                         {entry.label}:
                       </span>
                       <span
                         key={`id-${item.id}-name-${item.name}${index}-value`}
-                        className="text-right font-medium text-gray-700"
+                        className="text-right font-medium text-gray-700 text-xs border-b-[1px] border-gray-300"
                       >
-                        {Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(entry.value)}
+                        {entry.value === 0
+                          ? "N/A"
+                          : Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(entry.value)}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
-              <img
-                alt=""
-                src={item.imageUrl}
-                className="size-20 shrink-0 rounded-full bg-gray-300 object-contain"
-              />
             </div>
             <div>
               <div className="-mt-px flex divide-x divide-gray-200">
@@ -220,7 +229,7 @@ const Menu = () => {
                   >
                     <ListBulletIcon
                       aria-hidden="true"
-                      className="size-5 text-gray-400"
+                      className="size-5 text-gray-400 pointer-events-none"
                     />
                     Edit
                   </button>
@@ -233,7 +242,7 @@ const Menu = () => {
                   >
                     <TrashIcon
                       aria-hidden="true"
-                      className="size-5 text-gray-400"
+                      className="size-5 text-gray-400 pointer-events-none"
                     />
                     Delete
                   </button>
