@@ -39,6 +39,7 @@ const Menu = () => {
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Menu: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -78,6 +79,7 @@ const Menu = () => {
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Menu Item: DELETE ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -93,7 +95,7 @@ const Menu = () => {
   }, [editing, adding, deleting]);
 
   const handleDelete = (e) => {
-    deleteMenuItem(userId, parseInt(e.target.id), token);
+    deleteMenuItem(userId, e.target.id, token);
     setDeleting(false);
   };
 
@@ -123,7 +125,7 @@ const Menu = () => {
         token={token}
         fetchUserMenu={fetchUserMenu}
       />
-      <div className="sm:flex sm:items-center h-[10%] mb-8">
+      <div className="sm:flex sm:items-center h-[10%] mb-8 border-b-2 border-gray-300">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
             Your Menu Items
@@ -142,7 +144,7 @@ const Menu = () => {
       </div>
       <ul
         role="list"
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-y-auto"
+        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-[80%]"
       >
         {menuItems.map((item) => (
           <li

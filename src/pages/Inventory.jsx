@@ -32,6 +32,7 @@ const Inventory = () => {
     } catch (error) {
       toast.error(await error.message, {
         position: "top-center",
+        toastId: `Inventory: ${error.message}`,
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -59,7 +60,7 @@ const Inventory = () => {
     <section className="px-4 sm:px-6 lg:px-12 pt-8 w-full h-full">
       <EditInventoryModal editing={editing} setEditing={setEditing} itemId={itemId} token={token} userId={userId} fetchUserInventory={fetchUserInventory}/>
       <AddInventoryModal adding={adding} setAdding={setAdding} userId={userId} token={token} fetchUserInventory={fetchUserInventory} />
-      <div className="sm:flex sm:items-center h-[10%]">
+      <div className="sm:flex sm:items-center h-[10%] border-b-2 border-gray-300">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
             Your Inventory
@@ -79,7 +80,7 @@ const Inventory = () => {
         </div>
       </div>
       <div className="mt-4 flex h-[85%] min-w-full">
-        <div className="sm:-mx-6 lg:-mx-8 w-full">
+        <div className="w-full">
           <div className="inline-block min-w-full max-h-full align-middle overflow-y-auto pb-2">
             <table className="min-w-full">
               <thead className="sticky top-0 z-30 bg-[#F6FAFE] shadow-md">
