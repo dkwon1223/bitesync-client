@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import heroImage from '../assets/hero-cover.jpeg';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -7,7 +8,7 @@ const Hero = () => {
       <div className="container mx-auto flex flex-col items-center justify-center py-16 h-full bg-cover" style={{
         backgroundImage: `
           radial-gradient(circle, rgba(40, 70, 90, 0.8) 40%, rgba(0, 0, 0, 0.25) 100%), 
-          url('/src/assets/hero-cover.jpeg')
+          url('${heroImage}')
         `,
       }}>
         <article className="max-w-3xl flex flex-col justify-center items-center text-pretty text-zinc-200">
