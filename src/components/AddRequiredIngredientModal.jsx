@@ -19,7 +19,7 @@ const AddRequiredIngredientModal = ({
   const fetchUserInventory = async (token, userId) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}`,
+        `https://bitesync-v2.onrender.com/api/inventory/user/${userId}`,
         {
           method: "GET",
           headers: {
@@ -52,7 +52,7 @@ const AddRequiredIngredientModal = ({
   };
 
   const postIngredients = async () => {
-    const baseUrl = `http://localhost:8080/api/menu-inventory/user/${userId}`;
+    const baseUrl = `https://bitesync-v2.onrender.com/api/menu-inventory/user/${userId}`;
 
     try {
       const requests = ingredientsToAdd.map((item) => {

@@ -15,7 +15,7 @@ const AddInventoryModal = ({ adding, setAdding, userId, token, fetchUserInventor
   const postInventoryItem = async (userId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}`,
+        `https://bitesync-v2.onrender.com/api/inventory/user/${userId}`,
         {
           method: "POST",
           headers: {

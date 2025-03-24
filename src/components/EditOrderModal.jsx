@@ -19,7 +19,7 @@ const EditOrderModal = ({ editing, setEditing, token, userId, orderId }) => {
   const fetchSingleOrder = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/order/user/${userId}/orderId/${orderId}`,
+        `https://bitesync-v2.onrender.com/api/order/user/${userId}/orderId/${orderId}`,
         {
           method: "GET",
           headers: {

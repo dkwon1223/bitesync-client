@@ -22,7 +22,7 @@ export default function EditInventoryModal({
   const fetchInventoryItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
+        `https://bitesync-v2.onrender.com/api/inventory/user/${userId}/item/${itemId}`,
         {
           method: "GET",
           headers: {
@@ -54,7 +54,7 @@ export default function EditInventoryModal({
   const updateInventoryItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
+        `https://bitesync-v2.onrender.com/api/inventory/user/${userId}/item/${itemId}`,
         {
           method: "PUT",
           headers: {
@@ -94,7 +94,7 @@ export default function EditInventoryModal({
   const deleteInventoryItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}/item/${itemId}`,
+        `https://bitesync-v2.onrender.com/api/inventory/user/${userId}/item/${itemId}`,
         {
           method: "DELETE",
           headers: {

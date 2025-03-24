@@ -14,7 +14,7 @@ const Inventory = () => {
   const fetchUserInventory = async (token, userId) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/inventory/user/${userId}`,
+        `https://bitesync-v2.onrender.com/api/inventory/user/${userId}`,
         {
           method: "GET",
           headers: {

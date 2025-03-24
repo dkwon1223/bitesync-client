@@ -21,7 +21,7 @@ const Menu = () => {
   const fetchUserMenu = async (token, userId) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/menu/user/${userId}`,
+        `https://bitesync-v2.onrender.com/api/menu/user/${userId}`,
         {
           method: "GET",
           headers: {
@@ -53,7 +53,7 @@ const Menu = () => {
   const deleteMenuItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/menu/user/${userId}/item/${itemId}`,
+        `https://bitesync-v2.onrender.com/api/menu/user/${userId}/item/${itemId}`,
         {
           method: "DELETE",
           headers: {
