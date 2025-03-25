@@ -16,7 +16,7 @@ const AddMenuModal = ({ adding, setAdding, userId, token, fetchUserMenu }) => {
   const postMenuItem = async (userId, token) => {
     try {
       const response = await fetch(
-        `https://bitesync-v2.onrender.com/api/menu/user/${userId}`,
+        `https://bitesync-v2.onrender.com:8080/api/menu/user/${userId}`,
         {
           method: "POST",
           headers: {

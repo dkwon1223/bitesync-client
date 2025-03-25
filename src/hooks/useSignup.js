@@ -9,7 +9,7 @@ export const useSignup = () => {
 
   const signupUser = async (userCredentials) => {
     try {
-      const response = await fetch("https://bitesync-v2.onrender.com/api/user/signup", {
+      const response = await fetch("https://bitesync-v2.onrender.com:8080/api/user/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

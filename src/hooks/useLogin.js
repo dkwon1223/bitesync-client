@@ -12,7 +12,7 @@ export const useLogin = () => {
   const loginUser = async (userCredentials) => {
     try {
       const response = await fetch(
-        "https://bitesync-v2.onrender.com/api/user/authenticate",
+        "https://bitesync-v2.onrender.com:8080/api/user/authenticate",
         {
           method: "POST",
           headers: {

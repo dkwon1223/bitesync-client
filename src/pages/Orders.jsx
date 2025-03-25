@@ -12,7 +12,7 @@ const Orders = () => {
   const fetchUserOrders = async () => {
     try {
       const response = await fetch(
-        `https://bitesync-v2.onrender.com/api/order/user/${userId}/all`,
+        `https://bitesync-v2.onrender.com:8080/api/order/user/${userId}/all`,
         {
           method: "GET",
           headers: {

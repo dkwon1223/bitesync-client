@@ -29,7 +29,7 @@ const EditMenuModal = ({
   const fetchMenuItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `https://bitesync-v2.onrender.com/api/menu/user/${userId}/item/${itemId}`,
+        `https://bitesync-v2.onrender.com:8080/api/menu/user/${userId}/item/${itemId}`,
         {
           method: "GET",
           headers: {
@@ -61,7 +61,7 @@ const EditMenuModal = ({
   const fetchRequiredInventoryItems = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `https://bitesync-v2.onrender.com/api/menu-inventory/user/${userId}/menu/${itemId}`,
+        `https://bitesync-v2.onrender.com:8080/api/menu-inventory/user/${userId}/menu/${itemId}`,
         {
           method: "GET",
           headers: {
@@ -100,7 +100,7 @@ const EditMenuModal = ({
   const updateMenuItem = async (userId, itemId, token) => {
     try {
       const response = await fetch(
-        `https://bitesync-v2.onrender.com/api/menu/user/${userId}/item/${itemId}`,
+        `https://bitesync-v2.onrender.com:8080/api/menu/user/${userId}/item/${itemId}`,
         {
           method: "PUT",
           headers: {
@@ -138,7 +138,7 @@ const EditMenuModal = ({
   };
 
   const updateMenuInventory = async (inventoryItems, token) => {
-    const baseUrl = "https://bitesync-v2.onrender.com/api/menu-inventory";
+    const baseUrl = "https://bitesync-v2.onrender.com:8080/api/menu-inventory";
 
     try {
       const requests = inventoryItems.map((item) => {
@@ -190,7 +190,7 @@ const EditMenuModal = ({
   const deleteMenuInventory = async (ingredientId) => {
     try {
       const response = await fetch(
-        `https://bitesync-v2.onrender.com/api/menu-inventory/${ingredientId}`,
+        `https://bitesync-v2.onrender.com:8080/api/menu-inventory/${ingredientId}`,
         {
           method: "DELETE",
           headers: {
