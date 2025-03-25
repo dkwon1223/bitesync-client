@@ -138,7 +138,7 @@ const EditMenuModal = ({
   };
 
   const updateMenuInventory = async (inventoryItems, token) => {
-    const baseUrl = "https://bitesync-v2.onrender.com:8080/api/menu-inventory";
+    const baseUrl = "https://bitesync-v2.onrender.com:8080/menu-inventory";
 
     try {
       const requests = inventoryItems.map((item) => {
